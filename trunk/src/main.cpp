@@ -1,5 +1,6 @@
 #include "Entity\EntityManager.h"
 #include "Entity\Entity.h"
+#include "Entity\Components\Cube.h"
 
 #include <Irrlicht\irrlicht.h>
 #include <iostream>
@@ -28,11 +29,25 @@ int main(int argc, char **argv)
 
 	smgr->setShadowColor(video::SColor(150,0,0,0));
 	smgr->getParameters()->setAttribute(scene::ALLOW_ZWRITE_ON_TRANSPARENT, true);
+	smgr->addCameraSceneNode();
 
 	//////////////////////////////////////////
 	// TOTEM INITIALIZING
 	//////////////////////////////////////////
 	EntityManagerPtr emgr = std::make_shared<EntityManager>();
+
+	//Do a simple entity test:
+	EntityPtr entity = emgr->create();
+	{
+		//Components
+		auto node = entity->addComponent(std::make_shared<Component::Cube>(entity, "Shape", smgr));
+		
+		//Properties
+		entity->get<vector3df>("Position") = vector3df(0.0f, 0.0f, 20.0f);
+		
+		//Initialize
+		node->initialize();
+	}
 
 	//////////////////////////////////////////
 	// GUI INITIALIZING
