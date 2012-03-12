@@ -5,7 +5,7 @@ using namespace Component;
 Textured::Textured(const EntityPtr &owner, const std::string &name, irr::video::IVideoDriver* driver, const std::string &res_dir)
 	: Totem::Component<Textured>(name), owner(owner), driver(driver), res_dir(res_dir)
 {
-	texture = owner->add<std::string>("Texture", std::string());
+	textures = owner->addList<std::string>("Textures");
 	node = owner->add<irr::scene::ISceneNode*>("Node", nullptr);
 	node.valueChanged().connect(this, &Textured::OnNodeChanged);
 }
@@ -19,6 +19,8 @@ void Textured::OnNodeChanged(irr::scene::ISceneNode*const &oldValue, irr::scene:
 	if(newValue == nullptr)
 		return;
 
-	node.get()->setMaterialTexture(0, driver->getTexture((res_dir + "Textures\\" + texture.get()).c_str()));
+	for(unsigned int i = 0; i < textures.size(); i++)
+		node.get()->setMaterialTexture(i, driver->getTexture((res_dir + "Textures\\" + textures.get().at(i)).c_str()));
+
 	node.get()->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 }

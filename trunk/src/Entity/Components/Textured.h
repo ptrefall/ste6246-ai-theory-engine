@@ -19,7 +19,7 @@ namespace Component
 		irr::video::IVideoDriver* driver;
 		const std::string &res_dir;
 
-		Totem::Property<std::string> texture;
+		Totem::PropertyList<std::string> textures;
 		Totem::Property<irr::scene::ISceneNode*> node;
 
 		void OnNodeChanged(irr::scene::ISceneNode*const &oldValue, irr::scene::ISceneNode*const &newValue);
