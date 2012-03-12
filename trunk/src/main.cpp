@@ -1,6 +1,8 @@
 #include "Entity\EntityManager.h"
 #include "Entity\Entity.h"
+
 #include "Entity\Components\Cube.h"
+#include "Entity\Components\AnimateRotation.h"
 
 #include <Irrlicht\irrlicht.h>
 #include <iostream>
@@ -41,8 +43,11 @@ int main(int argc, char **argv)
 	{
 		//Components
 		auto node = entity->addComponent(std::make_shared<Component::Cube>(entity, "Shape", smgr));
+		auto rotate = entity->addComponent(std::make_shared<Component::AnimateRotation>(entity, "Animation", smgr));
+
+		//Component Properties
 		
-		//Properties
+		//Shared Properties
 		entity->get<vector3df>("Position") = vector3df(0.0f, 0.0f, 20.0f);
 		
 		//Initialize

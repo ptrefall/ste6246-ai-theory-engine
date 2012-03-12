@@ -15,6 +15,8 @@ namespace Component
 
 		void initialize();
 
+		irr::scene::ISceneNode *getNode() { return node.get(); }
+
 	private:
 		EntityWPtr owner;
 		irr::scene::ISceneManager *smgr;
