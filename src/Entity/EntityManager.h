@@ -1,26 +1,29 @@
 #pragma once
 
-#include <Totem/types_config.h>
 #include <Irrlicht\irrlicht.h>
-
-namespace Totem { class ComponentFactory; }
+#include <memory>
+#include <vector>
 
 class Entity;
+typedef std::shared_ptr<Entity> EntityPtr;
+
+class EntityManager;
+typedef std::shared_ptr<EntityManager> EntityManagerPtr;
+typedef std::weak_ptr<EntityManager> EntityManagerWPtr;
+
 class EntityManager
 {
 public:
-	EntityManager(irr::scene::ITerrainSceneNode& terrain) : nextEntityId(0), terrain(terrain) {}
+	EntityManager() {}
 	~EntityManager();
 
-	void update(const float &deltaTime);
+	void update(const double &deltaTime);
 
-	Entity &create(Totem::ComponentFactory &factory);
-	void erase(Entity *Entity);
-	std::vector<Entity*> &getEntities() { return entities; }
+	EntityPtr create();
+	void erase(EntityPtr entity);
+	std::vector<EntityPtr> &getEntities() { return entities; }
 
 protected:
-	std::vector<Entity*> entities;
-	std::vector<Entity*> pendingDelete;
-	unsigned int nextEntityId;
-	irr::scene::ITerrainSceneNode& terrain;
+	std::vector<EntityPtr> entities;
+	std::vector<EntityPtr> pendingDelete;
 };
