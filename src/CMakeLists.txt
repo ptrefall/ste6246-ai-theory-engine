@@ -39,6 +39,7 @@ set(ENTITY_COMPONENT_HDRS
 	./Entity/Components/Sprite.h
 	./Entity/Components/Cube.h
 	./Entity/Components/AnimateRotation.h
+	./Entity/Components/Textured.h
 )
 SOURCE_GROUP("Header Files\\Entity\\Components" FILES ${ENTITY_COMPONENT_HDRS})
 #---------------------------------------------------------------
@@ -47,6 +48,7 @@ set(ENTITY_COMPONENT_SRCS
 	./Entity/Components/Sprite.cpp
 	./Entity/Components/Cube.cpp
 	./Entity/Components/AnimateRotation.cpp
+	./Entity/Components/Textured.cpp
 )
 SOURCE_GROUP("Source Files\\Entity\\Components" FILES ${ENTITY_COMPONENT_SRCS})
 #---------------------------------------------------------------

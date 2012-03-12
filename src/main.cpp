@@ -3,6 +3,7 @@
 
 #include "Entity\Components\Cube.h"
 #include "Entity\Components\AnimateRotation.h"
+#include "Entity\Components\Textured.h"
 
 #include <Irrlicht\irrlicht.h>
 #include <iostream>
@@ -66,16 +67,16 @@ int main(int argc, char **argv)
 		//Components
 		auto node = entity->addComponent(std::make_shared<Component::Cube>(entity, "Shape", smgr));
 		auto rotate = entity->addComponent(std::make_shared<Component::AnimateRotation>(entity, "Animation", smgr));
+		auto texture = entity->addComponent(std::make_shared<Component::Textured>(entity, "Texture", driver, resourceDirectory));
 
 		//Component Properties
 
 		//Shared Properties
 		entity->get<vector3df>("Position") = vector3df(0.0f, 0.0f, 20.0f);
+		entity->get<std::string>("Texture") = "t351sml.jpg";
 		
 		//Initialize
-		node->initialize();
-		node->getNode()->setMaterialTexture(0, driver->getTexture((resourceDirectory + "Textures\\t351sml.jpg").c_str()));
-		node->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
+		node->initialize();	
 	}
 
 	//////////////////////////////////////////
