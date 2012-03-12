@@ -25,8 +25,6 @@ Cube::~Cube()
 void Cube::initialize()
 {
 	node = smgr->addCubeSceneNode(size, parent.get(), -1, position.get(), rotation.get(), scale.get());
-	irr::scene::ISceneNodeAnimator *animator = smgr->createRotationAnimator(irr::core::vector3df(0.0f, 1.0f, 0.0f));
-	node.get()->addAnimator(animator);
 }
 
 void Cube::OnPositionChanged(const irr::core::vector3df &oldValue, const irr::core::vector3df &newValue)
