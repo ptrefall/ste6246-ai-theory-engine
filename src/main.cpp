@@ -73,7 +73,10 @@ int main(int argc, char **argv)
 
 		//Shared Properties
 		entity->get<vector3df>("Position") = vector3df(0.0f, 0.0f, 20.0f);
-		entity->get<std::string>("Texture") = "t351sml.jpg";
+		
+		//Shared PropertyLists
+		auto textures = entity->getList<std::string>("Textures");
+		textures.push_back("t351sml.jpg");
 		
 		//Initialize
 		node->initialize();	
