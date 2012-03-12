@@ -1,32 +1,26 @@
 #pragma once
+#pragma warning(push)
+#pragma warning(disable : 4481)
 
-#include <Totem/ComponentHandler.h>
-#include <Totem/PropertyHandler.h>
-#include <Totem/PropertyListHandler.h>
-#include <Totem/Addons/TemplateEventHandler.h>
-#include <Totem/Addons/DelegateHandler.h>
+#include <Totem/ComponentContainer.h>
+#include <Totem/PropertyContainer.h>
+#include <Totem/PropertyListContainer.h>
+#include <Totem/Addons/EventSystem.h>
 
-#include <Irrlicht\irrlicht.h>
+#include <memory>
 
-class Entity :	public Totem::ComponentHandler<Entity>, 
-				public Totem::PropertyHandler<>, 
-				public Totem::PropertyListHandler<>, 
-				public Totem::Addon::TemplateEventHandler,
-				public Totem::Addon::DelegateHandler
+class Entity;
+typedef std::shared_ptr<Entity> EntityPtr;
+typedef std::weak_ptr<Entity> EntityWPtr;
+
+class Entity 
+	:	public Totem::ComponentContainer<>, 
+		public Totem::PropertyContainer<>, 
+		public Totem::PropertyListContainer<>, 
+		public Totem::Addon::EventSystem<>
 {
-public:
-	/// Constructor
-	Entity(Totem::ComponentFactory &factory, irr::scene::ITerrainSceneNode& terrain)
-#pragma warning(suppress: 4355)
-		: Totem::ComponentHandler<Entity>(*this, factory), terrain(terrain)
-	{
-	}
-
-	/// Destructor
-	virtual ~Entity() {}
-
-	irr::scene::ITerrainSceneNode &getTerrain() { return terrain; }
-
-protected:
-	irr::scene::ITerrainSceneNode& terrain;
+public:	
+	Entity() {}
 };
+
+#pragma warning(pop)

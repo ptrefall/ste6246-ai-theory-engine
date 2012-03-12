@@ -7,11 +7,10 @@ using namespace Totem;
 
 EntityManager::~EntityManager()
 {
-	for(unsigned int i = 0; i < entities.size(); i++)
-		delete entities[i];
+	entities.clear();
 }
 
-void EntityManager::update(const float &deltaTime)
+void EntityManager::update(const double &deltaTime)
 {
 	if(!pendingDelete.empty())
 	{
@@ -27,7 +26,6 @@ void EntityManager::update(const float &deltaTime)
 					break;
 				}
 			}
-			delete pendingDelete[i];
 		}
 		pendingDelete.clear();
 	}
@@ -36,14 +34,14 @@ void EntityManager::update(const float &deltaTime)
 		entities[i]->updateComponents(deltaTime);
 }
 
-Entity &EntityManager::create(ComponentFactory &factory)
+EntityPtr EntityManager::create()
 {
-	Entity *entity = new Entity(factory, terrain);
+	EntityPtr entity = std::make_shared<Entity>();
 	entities.push_back(entity);
-		return *entity;
+		return entity;
 }
 
-void EntityManager::erase(Entity *entity)
+void EntityManager::erase(EntityPtr entity)
 {
 	pendingDelete.push_back(entity);
 }
