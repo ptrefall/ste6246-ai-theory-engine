@@ -6,6 +6,7 @@
 
 #include <Irrlicht\irrlicht.h>
 #include <iostream>
+#include <string>
 
 using namespace irr;
 using namespace core;
@@ -16,6 +17,26 @@ using namespace gui;
 
 int main(int argc, char **argv)
 {
+	//////////////////////////////////////////
+	// SET UP SAFE RESOURCE DIRECTORY LOOKUP
+	//////////////////////////////////////////
+	std::string resourceDirectory = argv[0];
+	auto pos = resourceDirectory.find_last_of("/");
+	if(pos == resourceDirectory.npos)
+		pos = resourceDirectory.find_last_of("\\");
+	if(pos == resourceDirectory.npos)
+		return -1;
+	resourceDirectory = resourceDirectory.substr(0, pos);
+	
+	pos = resourceDirectory.find_last_of("/");
+	if(pos == resourceDirectory.npos)
+		pos = resourceDirectory.find_last_of("\\");
+	if(pos == resourceDirectory.npos)
+		return -1;
+	resourceDirectory = resourceDirectory.substr(0, pos+1);
+
+	resourceDirectory = resourceDirectory + "Resources\\";
+
 	//////////////////////////////////////////
 	// IRRLICHT INITIALIZING
 	//////////////////////////////////////////
@@ -29,6 +50,7 @@ int main(int argc, char **argv)
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
+	smgr->setAmbientLight(SColorf(0.2f, 0.2f, 0.2f));
 	smgr->setShadowColor(video::SColor(150,0,0,0));
 	smgr->getParameters()->setAttribute(scene::ALLOW_ZWRITE_ON_TRANSPARENT, true);
 	smgr->addCameraSceneNode();
@@ -46,12 +68,14 @@ int main(int argc, char **argv)
 		auto rotate = entity->addComponent(std::make_shared<Component::AnimateRotation>(entity, "Animation", smgr));
 
 		//Component Properties
-		
+
 		//Shared Properties
 		entity->get<vector3df>("Position") = vector3df(0.0f, 0.0f, 20.0f);
 		
 		//Initialize
 		node->initialize();
+		node->getNode()->setMaterialTexture(0, driver->getTexture((resourceDirectory + "Textures\\t351sml.jpg").c_str()));
+		node->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
 	}
 
 	//////////////////////////////////////////
