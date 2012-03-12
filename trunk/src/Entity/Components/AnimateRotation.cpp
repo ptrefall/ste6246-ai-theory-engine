@@ -17,6 +17,9 @@ AnimateRotation::~AnimateRotation()
 
 void AnimateRotation::OnNodeChanged(irr::scene::ISceneNode*const &oldValue, irr::scene::ISceneNode*const &newValue)
 {
+	if(newValue == nullptr)
+		return;
+
 	irr::scene::ISceneNodeAnimator *animator = smgr->createRotationAnimator(speed.get());
 	node.get()->addAnimator(animator);
 }
