@@ -12,6 +12,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
  
 set(CMAKE_DEBUG_POSTFIX "_d")
 
+set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
+
 set(BUILD_SHARED_LIBS FALSE CACHE BOOL "TRUE to build project as shared libraries, FALSE to build it as static libraries")
 if(NOT BUILD_SHARED_LIBS)
 	add_definitions(-D_IRR_STATIC_LIB_)
