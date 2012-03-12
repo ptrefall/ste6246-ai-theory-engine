@@ -65,9 +65,9 @@ int main(int argc, char **argv)
 	EntityPtr entity = emgr->create();
 	{
 		//Components
-		auto node = entity->addComponent(std::make_shared<Component::Cube>(entity, "Shape", smgr));
-		auto rotate = entity->addComponent(std::make_shared<Component::AnimateRotation>(entity, "Animation", smgr));
-		auto texture = entity->addComponent(std::make_shared<Component::Textured>(entity, "Texture", driver, resourceDirectory));
+		auto node = entity->addComponent(std::make_shared<Component::Cube>(entity, "Node", smgr));
+		entity->addComponent(std::make_shared<Component::AnimateRotation>(entity, "Animation", smgr));
+		entity->addComponent(std::make_shared<Component::Textured>(entity, "Textured", driver, resourceDirectory));
 
 		//Component Properties
 
