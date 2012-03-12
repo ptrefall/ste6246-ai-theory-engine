@@ -1,6 +1,3 @@
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include "Entity\EntityManager.h"
 #include "Entity\Entity.h"
 
