@@ -2,6 +2,7 @@
 #include "Entity\Entity.h"
 
 #include "Entity\Components\Cube.h"
+#include "Entity\Components\AnimatedMesh.h"
 #include "Entity\Components\AnimateRotation.h"
 #include "Entity\Components\Textured.h"
 #include "Entity\Components\Terrain.h"
@@ -116,7 +117,7 @@ int main(int argc, char **argv)
     navgraph->initialize();
     execution_time = device->getTimer()->getRealTime() - start_time;
     std::cout << "Generated Terrain Nav Mesh in " << (float)execution_time/1000.0f << " seconds!" << std::endl;
-    terrain_entity->get<vector3df>("Position") = -terrain->getTerrain()->getTerrainCenter();
+    //terrain_entity->get<vector3df>("Position") = -terrain->getTerrain()->getTerrainCenter();
 	}
   
   EntityPtr goal_entity = emgr->create();
@@ -130,7 +131,8 @@ int main(int argc, char **argv)
     //Component Properties
 
 		//Shared Properties
-    goal_entity->get<vector3df>("Position") = vector3df(0.0f, 0.0f, 20.0f);
+    goal_entity->get<vector3df>("Position") = vector3df(2600.0f, 600.0f, 2200.0f);
+    goal_entity->get<vector3df>("Scale") = vector3df(1.0f, 4.0f, 1.0f);
 
     //Shared PropertyLists
 		auto textures = goal_entity->getList<std::string>("Textures");
@@ -149,18 +151,39 @@ int main(int argc, char **argv)
   EntityPtr agent_entity = emgr->create();
   {
     //Components
-    auto pathfinder = agent_entity->addComponent(std::make_shared<Component::PathFinder>(agent_entity, "PathFinder", navgraph->getGraph()));
+    auto mesh = agent_entity->addComponent(std::make_shared<Component::AnimatedMesh>(agent_entity, "Node", smgr, resourceDirectory+"Meshes\\turtle1.ms3d"));
+    agent_entity->addComponent(std::make_shared<Component::Textured>(agent_entity, "Textured", driver, resourceDirectory));
+    auto terrainWalker = agent_entity->addComponent(std::make_shared<Component::TerrainWalker>(agent_entity, "TerrainWalker", smgr, terrain->getTerrain()));
+    auto pathfinder = agent_entity->addComponent(std::make_shared<Component::PathFinder>(agent_entity, "PathFinder", smgr, navgraph->getGraph()));
 
     //Component Properties
 		//Shared Properties
+    agent_entity->get<vector3df>("Position") = vector3df(2600.0f, 600.0f, 1400.0f);
+    agent_entity->get<vector3df>("Scale") = vector3df(0.5f, 0.5f, 0.5f);
+
     //Shared PropertyLists
+    auto textures = agent_entity->getList<std::string>("Textures");
+		textures.push_back("turtle1.png");
+    auto materialTypes = agent_entity->getList<unsigned int>("MaterialTypes");
+    materialTypes.push_back(video::EMT_SOLID);
 
     //Initialize
+    mesh->initialize();
+    terrainWalker->initialize();
     unsigned int start_time = device->getTimer()->getRealTime();
     pathfinder->initialize(goal_entity, std::make_shared<Algorithms::Search::DepthFirst>());
     unsigned int execution_time = device->getTimer()->getRealTime() - start_time;
     std::cout << "Generated Path in " << (float)execution_time/1000.0f << " seconds!" << std::endl;
   }
+
+  irr::scene::ITriangleSelector *selector = smgr->createTerrainTriangleSelector(terrain->getTerrain(), 0);
+  terrain->getTerrain()->setTriangleSelector(selector);
+  irr::scene::ISceneNodeAnimator *anim = smgr->createCollisionResponseAnimator(selector, camera);
+  selector->drop();
+  camera->addAnimator(anim);
+  anim->drop();
+
+  camera->setPosition( vector3df(2600.0f, 600.0f, 1500.0f) );
 
 	//////////////////////////////////////////
 	// GUI INITIALIZING

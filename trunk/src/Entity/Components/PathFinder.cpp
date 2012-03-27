@@ -2,8 +2,8 @@
 
 using namespace Component;
 
-PathFinder::PathFinder(const EntityPtr &owner, const std::string &name, Structures::GraphPtr graph)
-	: Totem::Component<PathFinder>(name), owner(owner), smgr(smgr), driver(driver)
+PathFinder::PathFinder(const EntityPtr &owner, const std::string &name, irr::scene::ISceneManager *smgr, Structures::GraphPtr graph)
+	: Totem::Component<PathFinder>(name), owner(owner), smgr(smgr)
 {
   this->graph = owner->add<Structures::GraphPtr>("NavGraph", graph);
   position = owner->add<irr::core::vector3df>("Position", irr::core::vector3df());
@@ -20,6 +20,13 @@ void PathFinder::initialize(const EntityPtr &target, const Algorithms::Search::I
   this->goal = target;
   this->searchAlg = search;
   findPath();
+  
+  for(auto i = 0; i < path.size(); i++)
+  {
+    irr::core::vector3df pos = path[i]->getFrom()->get<irr::core::vector3df>("Position").get();
+    //smgr->addCubeSceneNode(10.0f, 0, -1, pos);
+    smgr->addBillboardSceneNode(0, irr::core::dimension2df(10.0f, 10.0f), pos);
+  }
 }
 
 void PathFinder::findPath()
@@ -38,8 +45,8 @@ Structures::GraphNodePtr PathFinder::getNodeFromPos(const irr::core::vector3df &
   {
     auto &node = graph.get()->getNodes()[i];
     const irr::core::vector3df &pos = node->get<irr::core::vector3df>("Position").get();
-    if((unsigned int)pos.X*1000000.0f == (unsigned int)posit.X*1000000.0f &&
-       (unsigned int)pos.Y*1000000.0f == (unsigned int)posit.Y*1000000.0f)
+    if(abs(pos.X - posit.X) < 65.0f &&
+       abs(pos.Z - posit.Z) < 65.0f)
     {
       return node;
     }
