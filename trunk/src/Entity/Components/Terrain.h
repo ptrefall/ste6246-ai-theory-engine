@@ -9,6 +9,9 @@
 
 namespace Component
 {
+  class Terrain;
+  typedef std::shared_ptr<Terrain> TerrainPtr;
+
 	class Terrain : public Totem::Component<Terrain>
 	{
 	public:

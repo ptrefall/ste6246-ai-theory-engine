@@ -18,13 +18,13 @@ namespace Component
 	class PathFinder : public Totem::Component<PathFinder>
 	{
 	public:
-    PathFinder(const EntityPtr &owner, const std::string &name, irr::scene::ISceneManager *smgr, irr::video::IVideoDriver *driver);
+    PathFinder(const EntityPtr &owner, const std::string &name, Structures::GraphPtr graph);
 		virtual ~PathFinder();
 
 		void initialize(const EntityPtr &target, const Algorithms::Search::ISearchPtr &search);
+    void findPath();
 
 	private:
-    void findPath();
     Structures::GraphNodePtr getNodeFromPos(const irr::core::vector3df &posit);
 
 		EntityWPtr owner;
@@ -34,7 +34,8 @@ namespace Component
     Totem::Property<irr::core::vector3df> position;
     Totem::Property<Structures::GraphPtr> graph;
     Totem::Property<EntityPtr> goal;
+    Totem::Property<Algorithms::Search::ISearchPtr> searchAlg;
 
-    Algorithms::Search::ISearchPtr search;
+    std::vector<Structures::GraphEdgePtr> path;
 	};
 }

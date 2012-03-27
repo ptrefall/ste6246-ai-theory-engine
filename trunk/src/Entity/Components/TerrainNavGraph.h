@@ -13,6 +13,9 @@
 
 namespace Component
 {
+  class TerrainNavGraph;
+  typedef std::shared_ptr<TerrainNavGraph> TerrainNavGraphPtr;
+
 	class TerrainNavGraph : public Totem::Component<TerrainNavGraph>
 	{
 	public:
@@ -22,6 +25,7 @@ namespace Component
 		void initialize();
 
     irr::scene::ITerrainSceneNode *getTerrain() { return terrain.get(); }
+    Structures::GraphPtr getGraph() { return graph.get(); }
 
 	private:
     void genGraph();
