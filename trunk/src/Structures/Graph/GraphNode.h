@@ -19,6 +19,9 @@ namespace Structures
     GraphNode();
     virtual ~GraphNode();
 
+    void setUID(unsigned int uid) { this->uid = uid; }
+    unsigned int getUID() const { return uid; }
+
     void clearAdjNodes();
     void clearVisited();
 
@@ -37,6 +40,7 @@ namespace Structures
     const std::vector<GraphEdgePtr> &getAdjNodes() const { return adj_nodes; }
 
   private:
+    unsigned int uid;
     std::vector<GraphEdgePtr> adj_nodes;
     VisitStatus visit_status;
   };

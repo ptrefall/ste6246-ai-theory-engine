@@ -25,6 +25,7 @@ void TerrainNavGraph::genGraph()
   graph = std::make_shared<Structures::Graph>();
 
   irr::video::ITexture *h = driver->getTexture(heightmap.get().c_str());
+  graph.get()->getNodes().reserve(h->getSize().Width*h->getSize().Height);
   for(auto x_i = 0; x_i < h->getSize().Width; x_i++)
   {
     for(auto z_i = 0; z_i < h->getSize().Height; z_i++)
@@ -54,11 +55,11 @@ void TerrainNavGraph::genGraph()
 
   *******/
 
+  auto &nodes = graph.get()->getNodes();
   for(auto x_i = 0; x_i < h->getSize().Width; x_i++)
   {
     for(auto z_i = 0; z_i < h->getSize().Height; z_i++)
     {
-      auto &nodes = graph.get()->getNodes();
       auto &node = nodes[x_i + z_i * h->getSize().Width];
 
       //Neighbours

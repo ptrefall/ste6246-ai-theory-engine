@@ -42,6 +42,7 @@ set(ENTITY_COMPONENT_HDRS
 	./Entity/Components/TerrainNavGraph.h
 	./Entity/Components/AnimateRotation.h
 	./Entity/Components/Textured.h
+	./Entity/Components/PathFinder.h
 )
 SOURCE_GROUP("Header Files\\Entity\\Components" FILES ${ENTITY_COMPONENT_HDRS})
 #---------------------------------------------------------------
@@ -53,6 +54,7 @@ set(ENTITY_COMPONENT_SRCS
 	./Entity/Components/TerrainNavGraph.cpp
 	./Entity/Components/AnimateRotation.cpp
 	./Entity/Components/Textured.cpp
+	./Entity/Components/PathFinder.cpp
 )
 SOURCE_GROUP("Source Files\\Entity\\Components" FILES ${ENTITY_COMPONENT_SRCS})
 #---------------------------------------------------------------
@@ -93,6 +95,7 @@ set(STRUCTURES_SRCS
 SOURCE_GROUP("Source Files\\Structures" FILES ${STRUCTURES_SRCS})
 #---------------------------------------------------------------
 set(ALGORITHMS_SEARCH_HDRS
+	./Algorithms/Search/ISearch.h
 	./Algorithms/Search/BredthFirst.h
 	./Algorithms/Search/DepthFirst.h
 	./Algorithms/Search/Dijkstras.h
