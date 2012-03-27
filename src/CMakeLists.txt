@@ -40,6 +40,7 @@ set(ENTITY_COMPONENT_HDRS
 	./Entity/Components/Cube.h
 	./Entity/Components/Terrain.h
 	./Entity/Components/TerrainNavGraph.h
+	./Entity/Components/TerrainWalker.h
 	./Entity/Components/AnimateRotation.h
 	./Entity/Components/Textured.h
 	./Entity/Components/PathFinder.h
@@ -52,6 +53,7 @@ set(ENTITY_COMPONENT_SRCS
 	./Entity/Components/Cube.cpp
 	./Entity/Components/Terrain.cpp
 	./Entity/Components/TerrainNavGraph.cpp
+	./Entity/Components/TerrainWalker.cpp
 	./Entity/Components/AnimateRotation.cpp
 	./Entity/Components/Textured.cpp
 	./Entity/Components/PathFinder.cpp
