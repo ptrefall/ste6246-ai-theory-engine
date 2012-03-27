@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Totem\PropertyContainer.h>
+
 #include <memory>
 
 namespace Structures
@@ -10,7 +12,7 @@ namespace Structures
   class GraphEdge;
   typedef std::shared_ptr<GraphEdge> GraphEdgePtr;
 
-  class GraphEdge
+  class GraphEdge : public Totem::PropertyContainer<>
   {
   public:
     GraphEdge(const GraphNodePtr &from, const GraphNodePtr &to, unsigned int cost = 0);
