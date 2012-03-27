@@ -5,6 +5,7 @@
 using namespace Structures;
 
 Graph::Graph()
+  : uid(0)
 {
 }
 
@@ -26,6 +27,7 @@ void Graph::clearVisited()
 
 const GraphNodePtr &Graph::addNode(const GraphNodePtr &node)
 {
+  node->setUID(uid++);
   nodes.push_back(node);
   return node;
 }

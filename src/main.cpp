@@ -5,6 +5,7 @@
 #include "Entity\Components\AnimateRotation.h"
 #include "Entity\Components\Textured.h"
 #include "Entity\Components\Terrain.h"
+#include "Entity\Components\TerrainNavGraph.h"
 
 #include <Irrlicht\irrlicht.h>
 #include <iostream>
@@ -47,6 +48,7 @@ int main(int argc, char **argv)
 		return -1;
 
 	device->setWindowCaption(L"AI Theory Engine 2012");
+  device->getTimer()->start();
 
 	IVideoDriver* driver = device->getVideoDriver();
 	ISceneManager* smgr = device->getSceneManager();
@@ -76,9 +78,10 @@ int main(int argc, char **argv)
 	EntityPtr entity = emgr->create();
 	{
 		//Components
-    auto node = entity->addComponent(std::make_shared<Component::Terrain>(entity, "Node", smgr));
+    auto terrain = entity->addComponent(std::make_shared<Component::Terrain>(entity, "Node", smgr));
 		//entity->addComponent(std::make_shared<Component::AnimateRotation>(entity, "Animation", smgr));
 		entity->addComponent(std::make_shared<Component::Textured>(entity, "Textured", driver, resourceDirectory));
+    auto navgraph = entity->addComponent(std::make_shared<Component::TerrainNavGraph>(entity, "Graph", smgr, driver));
 
 		//Component Properties
 
@@ -99,7 +102,15 @@ int main(int argc, char **argv)
     textureScales.push_back(vector2df(1.0f, 20.0f));
 		
 		//Initialize
-		node->initialize();	
+    unsigned int start_time = device->getTimer()->getRealTime();
+		terrain->initialize();
+    unsigned int execution_time = device->getTimer()->getRealTime() - start_time;
+    std::cout << "Generated Terrain in " << (float)execution_time/1000.0f << " seconds!" << std::endl;
+
+    start_time = device->getTimer()->getRealTime();
+    navgraph->initialize();
+    execution_time = device->getTimer()->getRealTime() - start_time;
+    std::cout << "Generated Terrain Nav Mesh in " << (float)execution_time/1000.0f << " seconds!" << std::endl;
 	}
 
 	//////////////////////////////////////////

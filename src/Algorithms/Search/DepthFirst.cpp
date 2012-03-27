@@ -41,6 +41,41 @@ bool DepthFirst::visit(std::list<TreeNodePtr> &queue, const TreeNodePtr &node, c
       {
           queue.push_front(y);
           path.push_back(edge);
+          y->setVisitStatus(TreeNode::VISITED);
+      }
+    });
+  }
+
+  return false;
+}
+
+std::vector<GraphEdgePtr> DepthFirst::search(const GraphPtr &graph, const GraphNodePtr &start, const GraphNodePtr &goal)
+{
+  std::vector<GraphEdgePtr> path;
+  std::list<GraphNodePtr> queue;
+  visit(queue, start, goal, path);
+  graph->clearVisited();
+  return path;
+}
+
+bool DepthFirst::visit(std::list<GraphNodePtr> &queue, const GraphNodePtr &node, const Structures::GraphNodePtr &goal, std::vector<GraphEdgePtr> &path)
+{
+  queue.push_back(node);
+  while(!queue.empty())
+  {
+    GraphNodePtr x = queue.front(); queue.pop_front();
+    if(x->getUID() == goal->getUID())
+      return true;
+
+    const std::vector<GraphEdgePtr> &edges = x->getAdjNodes();
+    std::for_each(begin(edges), end(edges), [&](const GraphEdgePtr &edge)
+    {
+      GraphNodePtr y = edge->getTo();
+      if(y->getVisitStatus() == GraphNode::NOT_VISITED)
+      {
+          queue.push_front(y);
+          path.push_back(edge);
+          y->setVisitStatus(GraphNode::VISITED);
       }
     });
   }

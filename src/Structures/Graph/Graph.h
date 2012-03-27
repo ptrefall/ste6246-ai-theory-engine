@@ -27,5 +27,6 @@ namespace Structures
 
   private:
     std::vector<GraphNodePtr> nodes;
+    unsigned int uid;
   };
 }
