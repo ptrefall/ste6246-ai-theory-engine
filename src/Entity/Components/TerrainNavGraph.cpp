@@ -22,16 +22,18 @@ void TerrainNavGraph::initialize()
 
 void TerrainNavGraph::genGraph()
 {
+  unsigned int inv_resolution = 8;
+
   graph = std::make_shared<Structures::Graph>();
 
   irr::video::ITexture *h = driver->getTexture(heightmap.get().c_str());
-  graph.get()->getNodes().reserve(h->getSize().Width*h->getSize().Height);
-  for(auto x_i = 0; x_i < h->getSize().Width; x_i++)
+  graph.get()->getNodes().reserve((h->getSize().Width/inv_resolution)*(h->getSize().Height/inv_resolution));
+  for(auto x_i = 0; x_i < h->getSize().Width/inv_resolution; x_i++)
   {
-    for(auto z_i = 0; z_i < h->getSize().Height; z_i++)
+    for(auto z_i = 0; z_i < h->getSize().Height/inv_resolution; z_i++)
     {
-      float x = x_i * scale.get().X + terrain.get()->getPosition().X;
-      float z = z_i * scale.get().Z + terrain.get()->getPosition().Z;
+      float x = x_i * scale.get().X * inv_resolution + terrain.get()->getPosition().X;
+      float z = z_i * scale.get().Z * inv_resolution + terrain.get()->getPosition().Z;
       float y = terrain.get()->getHeight(x,z);
 
       auto node = std::make_shared<Structures::GraphNode>();
@@ -56,38 +58,38 @@ void TerrainNavGraph::genGraph()
   *******/
 
   auto &nodes = graph.get()->getNodes();
-  for(auto x_i = 0; x_i < h->getSize().Width; x_i++)
+  for(auto x_i = 0; x_i < h->getSize().Width/inv_resolution; x_i++)
   {
-    for(auto z_i = 0; z_i < h->getSize().Height; z_i++)
+    for(auto z_i = 0; z_i < h->getSize().Height/inv_resolution; z_i++)
     {
-      auto &node = nodes[x_i + z_i * h->getSize().Width];
+      auto &node = nodes[x_i + z_i * (h->getSize().Width/inv_resolution)];
 
       //Neighbours
       Structures::GraphNodePtr node_west, node_north, node_east, node_south;
       if(x_i != 0)
       {
-        node_west = nodes[x_i-1 + z_i * h->getSize().Width];
+        node_west = nodes[x_i-1 + z_i * (h->getSize().Width/inv_resolution)];
         float costf = node_west->get<irr::core::vector3df>("Position").get().Y - node->get<irr::core::vector3df>("Position").get().Y;
         unsigned int cost = (unsigned int)(costf * 100000.0f);
         node.get()->addAdjNode(node_west, cost);
       }
       if(z_i != 0)
       {
-        node_north = nodes[x_i + (z_i-1) * h->getSize().Width];
+        node_north = nodes[x_i + (z_i-1) * (h->getSize().Width/inv_resolution)];
         float costf = node_north->get<irr::core::vector3df>("Position").get().Y - node->get<irr::core::vector3df>("Position").get().Y;
         unsigned int cost = (unsigned int)(costf * 100000.0f);
         node.get()->addAdjNode(node_north, cost);
       }
-      if(x_i != h->getSize().Width-1)
+      if(x_i != (h->getSize().Width/inv_resolution)-1)
       {
-        node_east = nodes[x_i+1 + z_i * h->getSize().Width];
+        node_east = nodes[x_i+1 + z_i * (h->getSize().Width/inv_resolution)];
         float costf = node_east->get<irr::core::vector3df>("Position").get().Y - node->get<irr::core::vector3df>("Position").get().Y;
         unsigned int cost = (unsigned int)(costf * 100000.0f);
         node.get()->addAdjNode(node_east, cost);
       }
-      if(z_i != h->getSize().Height-1)
+      if(z_i != (h->getSize().Width/inv_resolution)-1)
       {
-        node_south = nodes[x_i + (z_i+1) * h->getSize().Width];
+        node_south = nodes[x_i + (z_i+1) * (h->getSize().Width/inv_resolution)];
         float costf = node_south->get<irr::core::vector3df>("Position").get().Y - node->get<irr::core::vector3df>("Position").get().Y;
         unsigned int cost = (unsigned int)(costf * 100000.0f);
         node.get()->addAdjNode(node_south, cost);

@@ -26,6 +26,6 @@ void TerrainWalker::initialize()
 void TerrainWalker::update(const float &dt)
 {
   irr::core::vector3df pos = node.get()->getPosition();
-  pos.Y = terrain->getHeight(pos.X, pos.Z) + (node.get()->getBoundingBox().getExtent().Y / 2.0f);
+  pos.Y = terrain->getHeight(pos.X, pos.Z);// + (node.get()->getBoundingBox().getExtent().Y / 2.0f);
   node.get()->setPosition(pos);
 }

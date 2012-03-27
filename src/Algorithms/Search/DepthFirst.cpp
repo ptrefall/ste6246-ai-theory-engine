@@ -1,6 +1,7 @@
 #include "DepthFirst.h"
 
 #include <algorithm>
+#include <iostream>
 
 using namespace Algorithms;
 using namespace Search;
@@ -53,7 +54,8 @@ std::vector<GraphEdgePtr> DepthFirst::search(const GraphPtr &graph, const GraphN
 {
   std::vector<GraphEdgePtr> path;
   std::list<GraphNodePtr> queue;
-  visit(queue, start, goal, path);
+  bool success = visit(queue, start, goal, path);
+  std::cout << ((success == true) ? "Found the path!" : "Failed to find the path!") << " " << path.size() << " path-edges generated on a graph of " << graph->getNodes().size() << " nodes!" << std::endl;
   graph->clearVisited();
   return path;
 }

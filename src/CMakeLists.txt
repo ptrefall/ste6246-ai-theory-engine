@@ -38,6 +38,7 @@ set(ENTITY_COMPONENT_HDRS
 	./Entity/Components/Health.h
 	./Entity/Components/Sprite.h
 	./Entity/Components/Cube.h
+	./Entity/Components/AnimatedMesh.h
 	./Entity/Components/Terrain.h
 	./Entity/Components/TerrainNavGraph.h
 	./Entity/Components/TerrainWalker.h
@@ -51,6 +52,7 @@ set(ENTITY_COMPONENT_SRCS
 	./Entity/Components/Health.cpp
 	./Entity/Components/Sprite.cpp
 	./Entity/Components/Cube.cpp
+	./Entity/Components/AnimatedMesh.cpp
 	./Entity/Components/Terrain.cpp
 	./Entity/Components/TerrainNavGraph.cpp
 	./Entity/Components/TerrainWalker.cpp
