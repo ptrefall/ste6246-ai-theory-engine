@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Totem\PropertyContainer.h>
+
 #include <memory>
 #include <vector>
 
@@ -11,7 +13,7 @@ namespace Structures
   class GraphNode;
   typedef std::shared_ptr<GraphNode> GraphNodePtr;
 
-  class GraphNode : public std::enable_shared_from_this<GraphNode>
+  class GraphNode : public Totem::PropertyContainer<>, public std::enable_shared_from_this<GraphNode>
   {
   public:
     GraphNode();
