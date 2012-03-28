@@ -8,6 +8,8 @@
 
 #include "../../Algorithms/Search/ISearch.h"
 
+#include "../../Scene/LineStripNode.h"
+
 #include <Totem/Component.h>
 #include <Irrlicht\irrlicht.h>
 
@@ -36,5 +38,7 @@ namespace Component
     Totem::Property<Algorithms::Search::ISearchPtr> searchAlg;
 
     std::vector<Structures::GraphEdgePtr> path;
+    Totem::PropertyList<irr::scene::ISceneNode*> path_gizmos;
+    Scene::LineStripNodePtr path_lines;
 	};
 }

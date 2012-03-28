@@ -69,15 +69,17 @@ bool DepthFirst::visit(std::list<GraphNodePtr> &queue, const GraphNodePtr &node,
     if(x->getUID() == goal->getUID())
       return true;
 
+    x->setVisitStatus(GraphNode::VISITED);
+
     const std::vector<GraphEdgePtr> &edges = x->getAdjNodes();
     std::for_each(begin(edges), end(edges), [&](const GraphEdgePtr &edge)
     {
       GraphNodePtr y = edge->getTo();
       if(y->getVisitStatus() == GraphNode::NOT_VISITED)
       {
+          y->setVisitStatus(GraphNode::VISITED);
           queue.push_front(y);
           path.push_back(edge);
-          y->setVisitStatus(GraphNode::VISITED);
       }
     });
   }
