@@ -74,8 +74,8 @@ bool BredthFirst::visit(std::list<GraphNodePtr> &queue, const GraphNodePtr &node
       GraphNodePtr y = edge->getTo();
       if(y->getVisitStatus() == GraphNode::NOT_VISITED)
       {
-          queue.push_back(y);
           y->setVisitStatus(GraphNode::VISITED);
+          queue.push_back(y);
           path.push_back(edge);
       }
     });
