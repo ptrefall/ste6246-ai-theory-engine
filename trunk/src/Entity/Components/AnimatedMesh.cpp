@@ -22,11 +22,13 @@ AnimatedMesh::~AnimatedMesh()
 {
 }
 
-void AnimatedMesh::initialize()
+void AnimatedMesh::initialize(unsigned int startframe, unsigned int endframe)
 {
 	//node = smgr->addCubeSceneNode(size, parent.get(), -1, position.get(), rotation.get(), scale.get());
   irr::scene::IAnimatedMesh *mesh = smgr->getMesh(mesh_filename.c_str());
-  node = smgr->addAnimatedMeshSceneNode(mesh, parent.get(), -1, position.get(), rotation.get(), scale.get());
+  irr::scene::IAnimatedMeshSceneNode *anim = smgr->addAnimatedMeshSceneNode(mesh, parent.get(), -1, position.get(), rotation.get(), scale.get());
+  anim->setFrameLoop(startframe,endframe);
+  node = anim;
 }
 
 void AnimatedMesh::OnPositionChanged(const irr::core::vector3df &oldValue, const irr::core::vector3df &newValue)

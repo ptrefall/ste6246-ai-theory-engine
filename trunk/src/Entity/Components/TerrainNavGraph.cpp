@@ -32,8 +32,8 @@ void TerrainNavGraph::genGraph()
   {
     for(auto z_i = 0; z_i < h->getSize().Height/inv_resolution; z_i++)
     {
-      float x = x_i * scale.get().X * inv_resolution + terrain.get()->getPosition().X;
-      float z = z_i * scale.get().Z * inv_resolution + terrain.get()->getPosition().Z;
+      float x = x_i * scale.get().X * inv_resolution - (inv_resolution*scale.get().X);
+      float z = z_i * scale.get().Z * inv_resolution - (inv_resolution*scale.get().X);
       float y = terrain.get()->getHeight(x,z);
 
       auto node = std::make_shared<Structures::GraphNode>();

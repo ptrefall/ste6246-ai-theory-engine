@@ -66,6 +66,8 @@ bool BredthFirst::visit(std::list<GraphNodePtr> &queue, const GraphNodePtr &node
     if(x->getUID() == goal->getUID())
       return true;
 
+    x->setVisitStatus(GraphNode::VISITED);
+
     const std::vector<GraphEdgePtr> &edges = x->getAdjNodes();
     std::for_each(begin(edges), end(edges), [&](const GraphEdgePtr &edge)
     {
@@ -73,8 +75,8 @@ bool BredthFirst::visit(std::list<GraphNodePtr> &queue, const GraphNodePtr &node
       if(y->getVisitStatus() == GraphNode::NOT_VISITED)
       {
           queue.push_back(y);
-          path.push_back(edge);
           y->setVisitStatus(GraphNode::VISITED);
+          path.push_back(edge);
       }
     });
   }

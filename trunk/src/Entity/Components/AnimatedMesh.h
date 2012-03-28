@@ -13,7 +13,7 @@ namespace Component
 		AnimatedMesh(const EntityPtr &owner, const std::string &name, irr::scene::ISceneManager *smgr, const std::string &mesh);
 		virtual ~AnimatedMesh();
 
-		void initialize();
+		void initialize(unsigned int startframe, unsigned int endframe);
 
 		irr::scene::ISceneNode *getNode() { return node.get(); }
 

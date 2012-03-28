@@ -45,6 +45,7 @@ set(ENTITY_COMPONENT_HDRS
 	./Entity/Components/AnimateRotation.h
 	./Entity/Components/Textured.h
 	./Entity/Components/PathFinder.h
+	./Entity/Components/PathWalker.h
 )
 SOURCE_GROUP("Header Files\\Entity\\Components" FILES ${ENTITY_COMPONENT_HDRS})
 #---------------------------------------------------------------
@@ -59,6 +60,7 @@ set(ENTITY_COMPONENT_SRCS
 	./Entity/Components/AnimateRotation.cpp
 	./Entity/Components/Textured.cpp
 	./Entity/Components/PathFinder.cpp
+	./Entity/Components/PathWalker.cpp
 )
 SOURCE_GROUP("Source Files\\Entity\\Components" FILES ${ENTITY_COMPONENT_SRCS})
 #---------------------------------------------------------------
@@ -123,6 +125,16 @@ set(ALGORITHMS_SRCS
 )
 SOURCE_GROUP("Source Files\\Algorithms" FILES ${ALGORITHMS_SRCS})
 #---------------------------------------------------------------
+set(SCENE_HDRS
+	./Scene/LineStripNode.h
+)
+SOURCE_GROUP("Header Files\\Scene" FILES ${SCENE_HDRS})
+#---------------------------------------------------------------
+set(SCENE_SRCS
+	./Scene/LineStripNode.cpp
+)
+SOURCE_GROUP("Source Files\\Scene" FILES ${SCENE_SRCS})
+#---------------------------------------------------------------
 set(HDRS
 	${DependsTotem_HDRS}
 	${DependsTotemAddons_HDRS}
@@ -133,6 +145,7 @@ set(HDRS
 	${STRUCTURES_TREE_HDRS}
 	${ALGORITHMS_HDRS}
 	${ALGORITHMS_SEARCH_HDRS}
+	${SCENE_HDRS}
 )
 #---------------------------------------------------------------
 set(SRCS
@@ -143,6 +156,7 @@ set(SRCS
 	${STRUCTURES_TREE_SRCS}
 	${ALGORITHMS_SRCS}
 	${ALGORITHMS_SEARCH_SRCS}
+	${SCENE_SRCS}
 	./main.cpp
 )
 #---------------------------------------------------------------
