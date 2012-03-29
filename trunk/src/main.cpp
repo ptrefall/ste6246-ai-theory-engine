@@ -26,6 +26,24 @@ using namespace video;
 using namespace io;
 using namespace gui;
 
+namespace { bool stop_application; }
+
+class InputHandler : public IEventReceiver
+{
+	bool OnEvent(const SEvent &event) override
+	{
+		if(event.EventType == EET_KEY_INPUT_EVENT)
+		{
+			if(!event.KeyInput.PressedDown && event.KeyInput.Key == irr::KEY_ESCAPE)
+			{
+				stop_application = true;
+				return true;
+			}
+		}
+		return false;
+	}
+};
+
 char choose_resolution()
 {
   char res_type;
@@ -81,7 +99,6 @@ char choose_goal()
   return goal_type;
 }
 
-
 int main(int argc, char **argv)
 {
   char res_type = choose_resolution();
@@ -94,6 +111,7 @@ int main(int argc, char **argv)
   std::cout << "Path nodes are represented by spheres on the terrain. Their color reflects the cost of that node, such that black is cheapest, then red, yellow and all the way to white for the most costly node." << std::endl;
   std::cout << "The path is marked by lines drawn between the path nodes. The chosed Hero will walk along this path until the goal is reached, it's speed as it walks reflects the cost of the next node." << std::endl;
   std::cout << "Finally, the graph is generated from the terrain data, and the cost reflects the height at each given point on the terrain." << std::endl;
+  std::cout << std::endl << "Press ESC to Quit application at any time!" << std::endl;
 
   if(search_type == 'c')
 	  std::cout << "We apply a heuristic function that maps the distance in 2D from current node to goal node based on vector math." << std::endl;
@@ -123,12 +141,13 @@ int main(int argc, char **argv)
 	//////////////////////////////////////////
 	// IRRLICHT INITIALIZING
 	//////////////////////////////////////////
+	auto input = std::make_shared<InputHandler>();
 	bool fullscreen = mode_type == 'a' ? true : false;
 	IrrlichtDevice *device = nullptr;
 	if(res_type == 'a')
-		device = createDevice( video::EDT_OPENGL, dimension2d<u32>(800,600), 32, fullscreen, false, false, 0);
+		device = createDevice( video::EDT_OPENGL, dimension2d<u32>(800,600), 32, fullscreen, false, false, input.get());
 	if(res_type == 'b')
-		device = createDevice( video::EDT_OPENGL, dimension2d<u32>(1920,1080), 32, fullscreen, false, false, 0);
+		device = createDevice( video::EDT_OPENGL, dimension2d<u32>(1920,1080), 32, fullscreen, false, false, input.get());
 	if(!device)
 		return -1;
 
@@ -319,7 +338,8 @@ int main(int argc, char **argv)
 	//////////////////////////////////////////
 	// HEARTBEAT
 	//////////////////////////////////////////
-	while(device->run())
+	stop_application = false;
+	while(device->run() && !stop_application)
 	{
 		if (!device->isWindowActive())
 			device->yield();
