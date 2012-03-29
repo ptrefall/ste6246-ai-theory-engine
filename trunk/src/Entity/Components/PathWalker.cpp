@@ -30,7 +30,20 @@ void PathWalker::initialize()
     }
   }
 
-  anim = smgr->createFlyStraightAnimator(p1, p2, 1000, false);
+	//Make our walker run at the speed of the cost of the next node
+	float costf = p2.Y;// - p1.Y;
+	costf /= 1000.0f;
+	costf *= costf;
+	costf = 1.0f - costf; //invert
+	costf *= costf;
+	costf *= costf;
+	costf *= costf;
+	costf *= costf;
+	costf = 1.0f - costf; //invert
+	int cost = (int)(costf * 1000.0f);
+	cost *= 6;
+
+  anim = smgr->createFlyStraightAnimator(p1, p2, cost, false);
   if (anim)
   {
     node.get()->addAnimator(anim);
@@ -66,19 +79,27 @@ void PathWalker::update(const float &dt)
       }
     }
 
-    anim = smgr->createFlyStraightAnimator(p1, p2, 1000, false);
+	//Make our walker run at the speed of the cost of the next node
+	float costf = p2.Y;// - p1.Y;
+	costf /= 1000.0f;
+	costf *= costf;
+	costf = 1.0f - costf; //invert
+	costf *= costf;
+	costf *= costf;
+	costf *= costf;
+	costf *= costf;
+	costf = 1.0f - costf; //invert
+	int cost = (int)(costf * 1000.0f);
+	cost *= 6;
+
+    anim = smgr->createFlyStraightAnimator(p1, p2, cost, false);
     if (anim)
       n->addAnimator(anim);
   }
 
   //Make our walker face in the direction of the walking path
-  core::vector3df nodePos = p2 - n->getPosition();
-  float rot = atan(nodePos.Z/nodePos.X) * (180.0f / irr::core::PI);
-  if((p2.X - n->getPosition().X) > 0) {
-    rot = 90 - rot;
-  } else if((p2.X - n->getPosition().X) < 0) {
-    rot = -90 - rot;
-  }
-  //rot -= 90;
-  n->setRotation(vector3df(0,rot,0));
+  core::vector3df rot = p2 - n->getPosition();
+  rot = rot.getHorizontalAngle();
+  
+  n->setRotation(rot);
 }

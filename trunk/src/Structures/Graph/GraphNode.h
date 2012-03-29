@@ -35,13 +35,20 @@ namespace Structures
     void setVisitStatus(VisitStatus visit_status) { this->visit_status = visit_status; }
 
   public:
-    GraphEdgePtr addAdjNode(const GraphNodePtr &node, unsigned int cost);
+    GraphEdgePtr addAdjNode(const GraphNodePtr &node, float cost);
     std::vector<GraphEdgePtr> &getAdjNodes() { return adj_nodes; }
     const std::vector<GraphEdgePtr> &getAdjNodes() const { return adj_nodes; }
+
+	GraphEdgePtr getAdjNode(const GraphNodePtr &node);
+
+  public:
+	  void setParent(const GraphNodePtr &parent) { this->parent = parent; }
+	  const GraphNodePtr &getParent() const { return parent; }
 
   private:
     unsigned int uid;
     std::vector<GraphEdgePtr> adj_nodes;
+	GraphNodePtr parent;
     VisitStatus visit_status;
   };
 }

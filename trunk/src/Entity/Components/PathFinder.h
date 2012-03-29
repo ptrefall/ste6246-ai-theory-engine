@@ -24,21 +24,22 @@ namespace Component
 		virtual ~PathFinder();
 
 		void initialize(const EntityPtr &target, const Algorithms::Search::ISearchPtr &search);
-    void findPath();
+		void findPath();
 
 	private:
-    Structures::GraphNodePtr getNodeFromPos(const irr::core::vector3df &posit);
+		Structures::GraphNodePtr getNodeFromPos(const irr::core::vector3df &posit);
+		irr::video::SColor getColorFrom1D(int color1d);
 
 		EntityWPtr owner;
 		irr::scene::ISceneManager *smgr;
 
-    Totem::Property<irr::core::vector3df> position;
-    Totem::Property<Structures::GraphPtr> graph;
-    Totem::Property<EntityPtr> goal;
-    Totem::Property<Algorithms::Search::ISearchPtr> searchAlg;
+		Totem::Property<irr::core::vector3df> position;
+		Totem::Property<Structures::GraphPtr> graph;
+		Totem::Property<EntityPtr> goal;
+		Totem::Property<Algorithms::Search::ISearchPtr> searchAlg;
 
-    std::vector<Structures::GraphEdgePtr> path;
-    Totem::PropertyList<irr::scene::ISceneNode*> path_gizmos;
-    Scene::LineStripNodePtr path_lines;
+		std::vector<Structures::GraphEdgePtr> path;
+		Totem::PropertyList<irr::scene::ISceneNode*> path_gizmos;
+		Scene::LineStripNodePtr path_lines;
 	};
 }

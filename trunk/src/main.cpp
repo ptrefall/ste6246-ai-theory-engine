@@ -13,6 +13,7 @@
 
 #include "Algorithms\Search\DepthFirst.h"
 #include "Algorithms\Search\BredthFirst.h"
+#include "Algorithms\Search\AStar.h"
 
 #include <Irrlicht\irrlicht.h>
 #include <iostream>
@@ -24,6 +25,28 @@ using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
+
+char choose_resolution()
+{
+  char res_type;
+  std::cout << "Do you want a resolution of a) 800x600 or b) 1920x1080 ?" << std::endl;
+  std::cin >> res_type;
+  if(res_type != 'a' && res_type != 'b')
+    res_type = choose_resolution();
+
+  return res_type;
+}
+
+char choose_fullscreen()
+{
+  char mode_type;
+  std::cout << "Do you want to a) run in fullscreen or b) in windowed mode?" << std::endl;
+  std::cin >> mode_type;
+  if(mode_type != 'a' && mode_type != 'b')
+    mode_type = choose_fullscreen();
+
+  return mode_type;
+}
 
 char choose_hero()
 {
@@ -47,10 +70,35 @@ char choose_search()
   return search_type;
 }
 
+char choose_goal()
+{
+  char goal_type;
+  std::cout << "Should goal be a) close or b) far away?" << std::endl;
+  std::cin >> goal_type;
+  if(goal_type != 'a' && goal_type != 'b')
+    goal_type = choose_goal();
+
+  return goal_type;
+}
+
+
 int main(int argc, char **argv)
 {
+  char res_type = choose_resolution();
+  char mode_type = choose_fullscreen();
   char hero_type = choose_hero();
   char search_type = choose_search();
+  char goal_type = choose_goal();
+
+  std::cout << "INFO:" << std::endl;
+  std::cout << "Path nodes are represented by spheres on the terrain. Their color reflects the cost of that node, such that black is cheapest, then red, yellow and all the way to white for the most costly node." << std::endl;
+  std::cout << "The path is marked by lines drawn between the path nodes. The chosed Hero will walk along this path until the goal is reached, it's speed as it walks reflects the cost of the next node." << std::endl;
+  std::cout << "Finally, the graph is generated from the terrain data, and the cost reflects the height at each given point on the terrain." << std::endl;
+
+  if(search_type == 'c')
+	  std::cout << "We apply a heuristic function that maps the distance in 2D from current node to goal node based on vector math." << std::endl;
+
+  system("pause");
 
 	//////////////////////////////////////////
 	// SET UP SAFE RESOURCE DIRECTORY LOOKUP
@@ -75,7 +123,12 @@ int main(int argc, char **argv)
 	//////////////////////////////////////////
 	// IRRLICHT INITIALIZING
 	//////////////////////////////////////////
-	IrrlichtDevice *device = createDevice( video::EDT_OPENGL, dimension2d<u32>(1920,1080), 32, false, false, false, 0);
+	bool fullscreen = mode_type == 'a' ? true : false;
+	IrrlichtDevice *device = nullptr;
+	if(res_type == 'a')
+		device = createDevice( video::EDT_OPENGL, dimension2d<u32>(800,600), 32, fullscreen, false, false, 0);
+	if(res_type == 'b')
+		device = createDevice( video::EDT_OPENGL, dimension2d<u32>(1920,1080), 32, fullscreen, false, false, 0);
 	if(!device)
 		return -1;
 
@@ -158,7 +211,11 @@ int main(int argc, char **argv)
     //Component Properties
 
 		//Shared Properties
-    goal_entity->get<vector3df>("Position") = vector3df(2600.0f, 600.0f, 2200.0f);
+	if(goal_type == 'a')
+		goal_entity->get<vector3df>("Position") = vector3df(2600.0f, 600.0f, 2200.0f);
+	else if(goal_type == 'b')
+		goal_entity->get<vector3df>("Position") = vector3df(1649.0f, 600.0f, 3891.0f);
+
     goal_entity->get<vector3df>("Scale") = vector3df(1.0f, 4.0f, 1.0f);
 
     //Shared PropertyLists
@@ -221,9 +278,9 @@ int main(int argc, char **argv)
     materialTypes.push_back(video::EMT_SOLID);
 
     //Initialize
-    if(search_type == 'a')
+    if(hero_type == 'a')
       mesh->initialize(1,11);
-    else if(search_type == 'b')
+    else if(hero_type == 'b')
       mesh->initialize(16,26);
     else
       return -1;
@@ -235,6 +292,8 @@ int main(int argc, char **argv)
       pathfinder->initialize(goal_entity, std::make_shared<Algorithms::Search::DepthFirst>());
     else if(search_type == 'b')
       pathfinder->initialize(goal_entity, std::make_shared<Algorithms::Search::BredthFirst>());
+	else if(search_type == 'c')
+		pathfinder->initialize(goal_entity, std::make_shared<Algorithms::Search::AStar>());
     else
       return -1;
     unsigned int execution_time = device->getTimer()->getRealTime() - start_time;
@@ -273,6 +332,7 @@ int main(int argc, char **argv)
 		guienv->drawAll();
 		driver->endScene();
 
+		//std::cout << "Pos: " << camera->getPosition().X << ", " << camera->getPosition().Z << std::endl;
 
 	}
 

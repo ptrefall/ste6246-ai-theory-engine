@@ -55,6 +55,7 @@ std::vector<GraphEdgePtr> DepthFirst::search(const GraphPtr &graph, const GraphN
   std::vector<GraphEdgePtr> path;
   std::list<GraphNodePtr> queue;
   bool success = visit(queue, start, goal, path);
+  constructPath(goal, path);
   std::cout << ((success == true) ? "Found the path!" : "Failed to find the path!") << " " << path.size() << " path-edges generated on a graph of " << graph->getNodes().size() << " nodes!" << std::endl;
   graph->clearVisited();
   return path;
@@ -79,10 +80,26 @@ bool DepthFirst::visit(std::list<GraphNodePtr> &queue, const GraphNodePtr &node,
       {
           y->setVisitStatus(GraphNode::VISITED);
           queue.push_front(y);
-          path.push_back(edge);
+		  y->setParent(x);
+          //path.push_back(edge);
       }
     });
   }
 
   return false;
+}
+
+void DepthFirst::constructPath(const Structures::GraphNodePtr &node, std::vector<Structures::GraphEdgePtr> &path)
+{
+  //Check parent from goal_node to start_node...
+	if(node->getParent() == nullptr)
+		return;
+
+	//Find reverse order edge
+	GraphEdgePtr edge = node->getParent()->getAdjNode(node);
+	if(edge == nullptr)
+		return;
+
+	constructPath(node->getParent(), path);
+	path.push_back(edge);
 }

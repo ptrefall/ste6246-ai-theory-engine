@@ -22,12 +22,10 @@ void PathFinder::initialize(const EntityPtr &target, const Algorithms::Search::I
   this->searchAlg = search;
   findPath();
 
+  if(path.empty())
+	  return;
+
   path_lines = std::make_shared<Scene::LineStripNode>(smgr->getRootSceneNode(), smgr);
-  
-  int color1d = 0;
-  int stepsize = (255*3) / path.size();
-  if(stepsize < 1)
-    stepsize = 1;
 
   irr::video::SColor color(255,0,0,0);
   for(auto i = 0; i < path.size(); i++)
@@ -35,30 +33,14 @@ void PathFinder::initialize(const EntityPtr &target, const Algorithms::Search::I
     irr::core::vector3df pos = path[i]->getFrom()->get<irr::core::vector3df>("Position").get();
     irr::core::vector3df to_pos = path[i]->getTo()->get<irr::core::vector3df>("Position").get();
 
+	float pos_costf = pos.Y;
+	pos_costf /= 1000.0f;
+	pos_costf *= pos_costf;
+	color = getColorFrom1D((int)(pos_costf * 5000.0f));
+
     if(i != 0 && i != path.size()-1)
     {
       irr::scene::IMeshSceneNode *gizmo = smgr->addSphereSceneNode(5.0f, 16, 0, -1, pos);
-
-      if(color1d - 255 > 0)
-      {
-        color.setRed(255);
-
-        if(color1d - 510 > 0)
-        {
-          color.setGreen(255);
-
-          if(color1d - 765 > 0)
-            color.setBlue(255);
-          else
-            color.setBlue(color1d-510);
-        }
-        else
-          color.setGreen(color1d-255);
-      }
-      else
-        color.setRed(color1d);
-    
-      color1d += stepsize;
 
       gizmo->getMaterial(0).AmbientColor = color;
       gizmo->getMaterial(0).DiffuseColor = color;
@@ -127,4 +109,28 @@ Structures::GraphNodePtr PathFinder::getNodeFromPos(const irr::core::vector3df &
     }
   }
   return nullptr;
+}
+
+irr::video::SColor PathFinder::getColorFrom1D(int color1d)
+{
+	irr::video::SColor color(255,0,0,0);
+	if(color1d - 255 > 0)
+    {
+		color.setRed(255);
+
+		if(color1d - 510 > 0)
+		{
+			color.setGreen(255);
+
+			if(color1d - 765 > 0)
+				color.setBlue(255);
+			else
+				color.setBlue(color1d-510);
+		}
+		else
+			color.setGreen(color1d-255);
+    }
+    else
+		color.setRed(color1d);
+	return color;
 }

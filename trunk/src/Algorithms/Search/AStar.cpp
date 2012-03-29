@@ -1,5 +1,6 @@
 #include "AStar.h"
 
+#include <Irrlicht\irrlicht.h>
 #include <algorithm>
 
 using namespace Algorithms;
@@ -31,8 +32,10 @@ std::vector<GraphEdgePtr> AStar::search(const GraphPtr &graph, const GraphNodePt
   initialize(graph, start, goal);
   while(!open.empty())
   {
-    step(graph, start, goal, path);
+    if(step(graph, start, goal, path))
+		break;
   }
+  constructPath(goal_node->node, path);
   graph->clearVisited();
   return path;
 }
@@ -91,7 +94,7 @@ bool AStar::step(const Structures::GraphPtr &graph, const Structures::GraphNodeP
         return;
     }
 
-    y->parent = x;
+	y->node->setParent(x->node);
     y->G = y_new_G;
     y->H = goalDistanceEstimate(graph, y->node, goal);
     y->F = y->G + y->H;
@@ -109,17 +112,34 @@ bool AStar::step(const Structures::GraphPtr &graph, const Structures::GraphNodeP
   x->node->setVisitStatus(GraphNode::VISITED);
   closed.push_back(x);
 
-  return true;
+  return false;
 }
 
 float AStar::goalDistanceEstimate(const Structures::GraphPtr &graph, const Structures::GraphNodePtr &start, const Structures::GraphNodePtr &goal)
 {
-  return 0.0f;
+	//Finish this...
+	irr::core::vector3df start_pos = start->get<irr::core::vector3df>("Position").get();
+	irr::core::vector3df goal_pos = goal->get<irr::core::vector3df>("Position").get();
+
+	irr::core::vector2df start_pos2D = irr::core::vector2df(start_pos.X, start_pos.Z);
+	irr::core::vector2df goal_pos2D = irr::core::vector2df(goal_pos.X, goal_pos.Z);
+
+  return start_pos2D.getDistanceFrom(goal_pos2D);
 }
 
-void AStar::constructPath(std::vector<Structures::GraphEdgePtr> &path)
+void AStar::constructPath(const Structures::GraphNodePtr &node, std::vector<Structures::GraphEdgePtr> &path)
 {
   //Check parent from goal_node to start_node...
+	if(node->getParent() == nullptr)
+		return;
+
+	//Find reverse order edge
+	GraphEdgePtr edge = node->getParent()->getAdjNode(node);
+	if(edge == nullptr)
+		return;
+
+	constructPath(node->getParent(), path);
+	path.push_back(edge);
 }
 
 bool AStar::sort(const Structures::GraphNodePtr &x, const Structures::GraphNodePtr &y)

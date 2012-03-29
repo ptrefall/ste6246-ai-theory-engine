@@ -15,16 +15,16 @@ namespace Structures
   class GraphEdge : public Totem::PropertyContainer<>
   {
   public:
-    GraphEdge(const GraphNodePtr &from, const GraphNodePtr &to, unsigned int cost = 0);
+    GraphEdge(const GraphNodePtr &from, const GraphNodePtr &to, float cost = 0);
     ~GraphEdge();
 
     const GraphNodePtr &getFrom() const { return from; }
     const GraphNodePtr &getTo() const { return to; }
-    unsigned int getCost() const { return cost; }
+    float getCost() const { return cost; }
 
   public:
     GraphNodePtr from;
     GraphNodePtr to;
-    unsigned int cost;
+    float cost;
   };
 }
