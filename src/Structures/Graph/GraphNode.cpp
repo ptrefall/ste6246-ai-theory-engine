@@ -5,7 +5,7 @@
 using namespace Structures;
 
 GraphNode::GraphNode()
-  : visit_status(NOT_VISITED)
+  : parent(nullptr), visit_status(NOT_VISITED)
 {
 }
 
@@ -23,10 +23,19 @@ void GraphNode::clearVisited()
   visit_status = NOT_VISITED;
 }
 
-GraphEdgePtr GraphNode::addAdjNode(const GraphNodePtr &node, unsigned int cost)
+GraphEdgePtr GraphNode::addAdjNode(const GraphNodePtr &node, float cost)
 {
   GraphEdgePtr edge = std::make_shared<GraphEdge>(shared_from_this(), node, cost);
   adj_nodes.push_back(edge);
   return edge;
 }
 
+GraphEdgePtr GraphNode::getAdjNode(const GraphNodePtr &node)
+{
+	for(auto i = 0; i < adj_nodes.size(); i++)
+	{
+		if(adj_nodes[i]->getTo()->getUID() == node->getUID())
+			return adj_nodes[i];
+	}
+	return nullptr;
+}

@@ -34,7 +34,6 @@ namespace Algorithms { namespace Search
 
   private:
     float goalDistanceEstimate(const Structures::GraphPtr &graph, const Structures::GraphNodePtr &start, const Structures::GraphNodePtr &goal);
-    void constructPath(std::vector<Structures::GraphEdgePtr> &path);
     static bool sort(const Structures::GraphNodePtr &x, const Structures::GraphNodePtr &y);
 
   private:
@@ -47,12 +46,13 @@ namespace Algorithms { namespace Search
     {
     public:
       Structures::GraphNodePtr node;
-      AStarNodePtr parent;
       float G;
       float H;
       float F;
+	  AStarNode() : node(nullptr), G(0.0f), H(0.0f), F(0.0f) {}
     };
     
+	void constructPath(const Structures::GraphNodePtr &node, std::vector<Structures::GraphEdgePtr> &path);
 
     std::list<AStarNodePtr> open;
     std::list<AStarNodePtr> closed;

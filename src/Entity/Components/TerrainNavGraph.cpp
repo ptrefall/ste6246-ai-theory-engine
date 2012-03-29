@@ -34,6 +34,11 @@ void TerrainNavGraph::genGraph()
     {
       float x = x_i * scale.get().X * inv_resolution - (inv_resolution*scale.get().X);
       float z = z_i * scale.get().Z * inv_resolution - (inv_resolution*scale.get().X);
+	  if(x_i == 0)
+		  x = 0.0f;
+	  if(z_i == 0)
+		  z = 0.0f;
+
       float y = terrain.get()->getHeight(x,z);
 
       auto node = std::make_shared<Structures::GraphNode>();
@@ -70,29 +75,33 @@ void TerrainNavGraph::genGraph()
       {
         node_west = nodes[x_i-1 + z_i * (h->getSize().Width/inv_resolution)];
         float costf = node_west->get<irr::core::vector3df>("Position").get().Y - node->get<irr::core::vector3df>("Position").get().Y;
-        unsigned int cost = (unsigned int)(costf * 100000.0f);
-        node.get()->addAdjNode(node_west, cost);
+		costf /= 1000.0f;
+		costf *= costf;
+        node.get()->addAdjNode(node_west, costf);
       }
       if(z_i != 0)
       {
         node_north = nodes[x_i + (z_i-1) * (h->getSize().Width/inv_resolution)];
         float costf = node_north->get<irr::core::vector3df>("Position").get().Y - node->get<irr::core::vector3df>("Position").get().Y;
-        unsigned int cost = (unsigned int)(costf * 100000.0f);
-        node.get()->addAdjNode(node_north, cost);
+		costf /= 1000.0f;
+		costf *= costf;
+        node.get()->addAdjNode(node_north, costf);
       }
       if(x_i != (h->getSize().Width/inv_resolution)-1)
       {
         node_east = nodes[x_i+1 + z_i * (h->getSize().Width/inv_resolution)];
         float costf = node_east->get<irr::core::vector3df>("Position").get().Y - node->get<irr::core::vector3df>("Position").get().Y;
-        unsigned int cost = (unsigned int)(costf * 100000.0f);
-        node.get()->addAdjNode(node_east, cost);
+		costf /= 1000.0f;
+		costf *= costf;
+        node.get()->addAdjNode(node_east, costf);
       }
       if(z_i != (h->getSize().Width/inv_resolution)-1)
       {
         node_south = nodes[x_i + (z_i+1) * (h->getSize().Width/inv_resolution)];
         float costf = node_south->get<irr::core::vector3df>("Position").get().Y - node->get<irr::core::vector3df>("Position").get().Y;
-        unsigned int cost = (unsigned int)(costf * 100000.0f);
-        node.get()->addAdjNode(node_south, cost);
+		costf /= 1000.0f;
+		costf *= costf;
+        node.get()->addAdjNode(node_south, costf);
       }
     }
   }

@@ -19,6 +19,8 @@ namespace Algorithms { namespace Search
   private:
     bool visit(std::list<Structures::TreeNodePtr> &queue, const Structures::TreeNodePtr &node, const Structures::TreeNodePtr &goal, std::vector<Structures::TreeEdgePtr> &path);
     bool visit(std::list<Structures::GraphNodePtr> &queue, const Structures::GraphNodePtr &node, const Structures::GraphNodePtr &goal, std::vector<Structures::GraphEdgePtr> &path);
+
+	void constructPath(const Structures::GraphNodePtr &node, std::vector<Structures::GraphEdgePtr> &path);
   };
 }}
 

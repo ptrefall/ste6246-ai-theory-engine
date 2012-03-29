@@ -53,6 +53,7 @@ std::vector<GraphEdgePtr> BredthFirst::search(const GraphPtr &graph, const Graph
   std::vector<GraphEdgePtr> path;
   std::list<GraphNodePtr> queue;
   visit(queue, start, goal, path);
+  constructPath(goal, path);
   graph->clearVisited();
   return path;
 }
@@ -76,10 +77,26 @@ bool BredthFirst::visit(std::list<GraphNodePtr> &queue, const GraphNodePtr &node
       {
           y->setVisitStatus(GraphNode::VISITED);
           queue.push_back(y);
-          path.push_back(edge);
+		  y->setParent(x);
+          //path.push_back(edge);
       }
     });
   }
 
   return false;
+}
+
+void BredthFirst::constructPath(const Structures::GraphNodePtr &node, std::vector<Structures::GraphEdgePtr> &path)
+{
+  //Check parent from goal_node to start_node...
+	if(node->getParent() == nullptr)
+		return;
+
+	//Find reverse order edge
+	GraphEdgePtr edge = node->getParent()->getAdjNode(node);
+	if(edge == nullptr)
+		return;
+
+	constructPath(node->getParent(), path);
+	path.push_back(edge);
 }
