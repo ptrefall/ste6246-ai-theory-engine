@@ -26,7 +26,7 @@ void Loader::init(const std::string &path)
     this->path = path;
 }
 
-void Loader::load(const std::string &filename, std::vector<Perceptron::Data> &input, std::vector<Perceptron::Data> &desired)
+void Loader::load(const std::string &filename, std::vector<float> &input, std::vector<float> &desired)
 {
     std::vector<std::string> lines;
     std::ifstream file(path+"\\"+filename);
@@ -81,7 +81,7 @@ void Loader::load(const std::string &filename, std::vector<Perceptron::Data> &in
 ///////////////////////////////////
 // INPUT PARSING
 ///////////////////////////////////
-void Loader::parseInput(const std::vector<std::string> &lines, unsigned int &index, std::vector<Perceptron::Data> &input_vector)
+void Loader::parseInput(const std::vector<std::string> &lines, unsigned int &index, std::vector<float> &input_vector)
 {
 	while(index < lines.size())
 	{
@@ -101,7 +101,6 @@ void Loader::parseInput(const std::vector<std::string> &lines, unsigned int &ind
 
 		//Otherwise, we parse the line as a setting
 		const std::string &input_line = lines[index++];
-        Perceptron::Data data;
         for(unsigned int i = 0; i < input_line.size(); i++)
         {
             char input_char = input_line[i];
@@ -111,9 +110,8 @@ void Loader::parseInput(const std::vector<std::string> &lines, unsigned int &ind
             if(input != 0 && input != 1)
                 std::cout << "ERROR: AN INPUT VALUE IS OUT OF BOUNDS!" << std::endl;
             else
-                data.line.push_back(input);
+                input_vector.push_back(input);
         }
-        input_vector.push_back(std::move(data));
 	}
 
 	std::cout << "ERROR: OUT OF BOUNDS WHEN PARSING INPUT VECTOR FOR " << lines[0] << "!" << std::endl;

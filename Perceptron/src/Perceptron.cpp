@@ -1,5 +1,88 @@
 #include "Perceptron.h"
-#include "Random.h"
+#include <algorithm>
+
+Perceptron::Perceptron(const std::vector<float> &input)
+{
+    input_layer = std::make_shared<Layer>(input.size());
+    for(unsigned int i = 0; i < input_layer->getNeurons().size(); i++)
+        input_layer->getNeurons()[i]->set(input[i]);
+
+    output_layer = std::make_shared<Layer>(1);
+    output_layer->connect_from(input_layer);    //Connect the neurons of input_layer with the output_layer neuron
+    output_layer->setCellFunc([](float result)          //Define the cell function of the output_layer neuron
+    {
+        //Basic threshold function. Anything above 1 is 1, anything below 0 is 0.
+        return ((result < 0.0f) ? 0.0f : ((result >= 1.0f) ? 1.0f : result));
+    });
+    output_layer->setErrorFunc([](float error, const std::vector<EdgePtr> &edges)          //Define the error function of the output_layer neuron
+    {
+        std::for_each(begin(edges), end(edges), [&](const EdgePtr &edge)
+        {
+            edge->setWeight(edge->getWeight() + error);
+        });
+    });
+}
+
+Perceptron::~Perceptron()
+{
+}
+
+void Perceptron::start_learning(unsigned int num_cycles)
+{
+    for(unsigned int i = 0; i < num_cycles; i++)
+    {
+        float SUM = output_layer->sumEdges();               //Only one neuron who's edges are connected from all the input_layer's neurons
+        float result = output_layer->cell_function(SUM);    //We can call the cell_function directly on the output layer, since we know it only has a single neuron
+        float error = calculate_error(result);              //
+        output_layer->propagate_error(error);               //Propagate errors into the edges between the layers
+    }
+}
+
+float Perceptron::test() 
+{
+    return 0.0f;
+}
+
+float Perceptron::calculate_error(float result)
+{
+    if(result < 1.0f)
+        return 1.0f - result;
+    else if(result > 1.0f)
+        return result - 1.0f;
+    else
+        return 0.0f;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*#include "Random.h"
 
 #include <iostream>
 
@@ -138,3 +221,4 @@ void Perceptron::print(unsigned int test_index)
         std::cout << results[test_index];
     }
 }
+*/

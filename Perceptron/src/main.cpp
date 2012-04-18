@@ -24,30 +24,16 @@ int main(int /*argc*/, char** argv)
         std::string choice;
         std::getline(std::cin, choice);
 
-        bool N_TO_N = false;
-
-        std::vector<Perceptron::Data> input;
-        std::vector<Perceptron::Data> desired;
+        std::vector<float> input;
+        std::vector<float> desired;
         if(choice == "1")
             Loader::getSingleton()->load("AND.dat", input, desired);
         else if(choice == "2")
             Loader::getSingleton()->load("OR.dat", input, desired);
         else if(choice == "3")
-        {
             Loader::getSingleton()->load("T.dat", input, desired);
-            N_TO_N = true;
-        }
         else
-        {
             Loader::getSingleton()->load(choice, input, desired);
-            std::cout << "How does the Input/Desire compare? 1) N/1 mapping 2) N/N mapping." << std::endl;
-            std::string mapping;
-            std::getline(std::cin, mapping);
-            if(mapping == "2")
-                N_TO_N = true;
-        }
-
-        
 
         std::cout << "Which learning rate do you want?" << std::endl;
         std::string learning_rate_string;
@@ -74,19 +60,20 @@ int main(int /*argc*/, char** argv)
             std::cout << "Loaded following input vector:" << std::endl;
             std::cout << "{" << std::endl;
             for(unsigned int i = 0; i < input.size(); i++)
-                input[i].print();
-            std::cout << "}" << std::endl << std::endl;
+                std::cout << input[i] << " ";
+            std::cout << std::endl << "}" << std::endl << std::endl;
             std::cout << "Loaded following desired vector:" << std::endl;
             std::cout << "{" << std::endl;
             for(unsigned int i = 0; i < desired.size(); i++)
-                desired[i].print();
-            std::cout << "}" << std::endl << std::endl;
+                std::cout << desired[i] << " ";
+            std::cout << std::endl << "}" << std::endl << std::endl;
         }
 
-        auto perceptron = std::make_shared<Perceptron>(1.0f);
-        for(unsigned int i = 0; i < iter; i++)
-        {
-            if(N_TO_N)
+        auto perceptron = std::make_shared<Perceptron>(input);
+        perceptron->start_learning(iter);
+
+
+         /*   if(N_TO_N)
                 perceptron->train(input, desired, learning_rate);
             else
                 perceptron->train(input, desired, learning_rate);
@@ -122,7 +109,8 @@ int main(int /*argc*/, char** argv)
                 perceptron->print(i);
                 std::cout << std::endl;
             }
-        }
+        }*/
+
         std::cout << std::endl << "Run again? 1) yes or 2) no." << std::endl;
         std::string again;
         std::getline(std::cin, again);

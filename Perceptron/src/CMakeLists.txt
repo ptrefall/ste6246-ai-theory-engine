@@ -29,6 +29,7 @@ set(HDRS
   StringHelper.h
   Random.h
   Perceptron.h
+  Network.h
 )
 
 set(SRCS
@@ -37,6 +38,7 @@ set(SRCS
   StringHelper.cpp
   Random.cpp
   Perceptron.cpp
+  Network.cpp
 )
  
 add_executable(Perceptron ${HDRS} ${SRCS})

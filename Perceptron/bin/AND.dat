@@ -1,7 +1,14 @@
-INPUT
+INPUT 0
 {
 	11
+}
+
+INPUT 1
+{
 	10
+}
+INPUT 0
+{
 	01
 	00
 }
