@@ -26,7 +26,7 @@ void Loader::init(const std::string &path)
     this->path = path;
 }
 
-void Loader::load(const std::string &filename, std::vector<std::vector<float>> &input)
+bool Loader::load(const std::string &filename, std::vector<std::vector<float>> &input)
 {
     std::vector<std::string> lines;
     std::ifstream file(path+"\\"+filename);
@@ -47,7 +47,7 @@ void Loader::load(const std::string &filename, std::vector<std::vector<float>> &
     else
     {
         std::cout << "ERROR: FAILED TO LOAD FILE " << filename << "!" << std::endl;
-        return;
+        return false;
     }
 
     //Loop over the rest of the lines and parse the text
@@ -68,7 +68,7 @@ void Loader::load(const std::string &filename, std::vector<std::vector<float>> &
 		}
 	}
 
-    return;
+    return true;
 }
 
 ///////////////////////////////////
