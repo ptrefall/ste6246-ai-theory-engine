@@ -18,6 +18,9 @@ public:
     void setWeight(float weight) { this->weight = weight; }
     float getWeight() const { return weight; }
 
+    const NeuronPtr &getFrom() const { return from; }
+    const NeuronPtr &getTo() const { return to; }
+
 private:
     NeuronPtr from;
     NeuronPtr to;
@@ -87,9 +90,9 @@ public:
     Network() {}
     virtual ~Network() {}
 
-    virtual void start_learning(unsigned int num_cycles) = 0;
-    virtual float test() = 0;
+    virtual std::vector<std::string> start_learning(unsigned int num_cycles, float learning_rate, const std::vector<std::vector<float>> &inputs) = 0;
+    virtual std::vector<std::string> train(float learning_rate, const std::vector<std::vector<float>> &inputs) = 0;
 
 protected:
-    virtual float calculate_error(float result) = 0;
+    virtual float calculate_error(float result, float desired) = 0;
 };

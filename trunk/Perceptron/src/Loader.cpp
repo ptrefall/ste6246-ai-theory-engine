@@ -26,7 +26,7 @@ void Loader::init(const std::string &path)
     this->path = path;
 }
 
-void Loader::load(const std::string &filename, std::vector<float> &input, std::vector<float> &desired)
+void Loader::load(const std::string &filename, std::vector<std::vector<float>> &input)
 {
     std::vector<std::string> lines;
     std::ifstream file(path+"\\"+filename);
@@ -58,14 +58,7 @@ void Loader::load(const std::string &filename, std::vector<float> &input, std::v
 		if(StringHelper::toUpper(lines[parse_index], lines[parse_index].size()).find("INPUT") != std::string::npos)
 		{
 			parse_index++;
-			parseInput(lines, parse_index, input);
-		}
-
-        //DESIRED
-		if(StringHelper::toUpper(lines[parse_index], lines[parse_index].size()).find("DESIRED") != std::string::npos)
-		{
-			parse_index++;
-			parseInput(lines, parse_index, desired);
+			parseInputs(lines, parse_index, input);
 		}
 
 		//KEEP LOOP ALIVE
@@ -81,7 +74,34 @@ void Loader::load(const std::string &filename, std::vector<float> &input, std::v
 ///////////////////////////////////
 // INPUT PARSING
 ///////////////////////////////////
-void Loader::parseInput(const std::vector<std::string> &lines, unsigned int &index, std::vector<float> &input_vector)
+void Loader::parseInputs(const std::vector<std::string> &lines, unsigned int &index, std::vector<std::vector<float>> &inputs)
+{
+	while(index < lines.size())
+	{
+		//Ignore start bracket
+		if(lines[index].find("{") != std::string::npos)
+		{
+			index++;
+			continue;
+		}
+
+		//Finish parsing at end bracket
+		if(lines[index].find("}") != std::string::npos)
+		{
+			index++;
+			return;
+		}
+
+		//Otherwise, we parse the line as a setting
+		const std::string &input_line = lines[index++];
+        std::vector<float> input;
+        parseInput(lines, index, input);
+        inputs.push_back(std::move(input));
+	}
+
+	std::cout << "ERROR: OUT OF BOUNDS WHEN PARSING INPUT VECTOR FOR " << lines[0] << "!" << std::endl;
+}
+void Loader::parseInput(const std::vector<std::string> &lines, unsigned int &index, std::vector<float> &input)
 {
 	while(index < lines.size())
 	{
@@ -106,11 +126,11 @@ void Loader::parseInput(const std::vector<std::string> &lines, unsigned int &ind
             char input_char = input_line[i];
             if(input_char == '\t' || input_char == '\n')
                 continue;
-            unsigned int input = atoi(&input_char);
-            if(input != 0 && input != 1)
+            unsigned int in = atoi(&input_char);
+            if(in != 0 && in != 1)
                 std::cout << "ERROR: AN INPUT VALUE IS OUT OF BOUNDS!" << std::endl;
             else
-                input_vector.push_back(input);
+                input.push_back(in);
         }
 	}
 

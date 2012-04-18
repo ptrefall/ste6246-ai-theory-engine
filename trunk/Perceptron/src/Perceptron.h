@@ -5,14 +5,16 @@
 class Perceptron : public Network
 {
 public:
-    Perceptron(const std::vector<float> &input);
+    Perceptron(unsigned int num_input_layer_neurons);
     virtual ~Perceptron();
 
-    void start_learning(unsigned int num_cycles) override;
-    float test() override;
+    std::vector<std::string> start_learning(unsigned int num_cycles, float learning_rate, const std::vector<std::vector<float>> &inputs) override;
+    std::vector<std::string> train(float learning_rate, const std::vector<std::vector<float>> &inputs) override;
 
 protected:
-    float calculate_error(float result) override;
+    float calculate_error(float result, float desired) override;
+    bool check_error_accum(float error);
+    std::vector<std::string> generate_output(const std::vector<float> &expected, const std::vector<float> &results, const std::vector<float> &errors, const std::vector<float> &sums);
 
 private:
     LayerPtr input_layer;
