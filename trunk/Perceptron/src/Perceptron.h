@@ -1,6 +1,25 @@
 #pragma once
 
-#include <vector>
+#include "Network.h"
+
+class Perceptron : public Network
+{
+public:
+    Perceptron(const std::vector<float> &input);
+    virtual ~Perceptron();
+
+    void start_learning(unsigned int num_cycles) override;
+    float test() override;
+
+protected:
+    float calculate_error(float result) override;
+
+private:
+    LayerPtr input_layer;
+    LayerPtr output_layer;
+};
+
+/*#include <vector>
 #include <memory>
 #include <algorithm>
 #include <iostream>
@@ -38,5 +57,5 @@ private:
     float threshold;
     float total;
     std::vector<float> results;
-};
+};*/
 typedef std::shared_ptr<Perceptron> PerceptronPtr;

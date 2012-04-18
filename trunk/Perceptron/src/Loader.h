@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Perceptron.h"
-
 #include <string>
 #include <vector>
 #include <memory>
@@ -17,10 +15,10 @@ public:
 	~Loader();
 
 	void init(const std::string &path);
-    void load(const std::string &filename, std::vector<Perceptron::Data> &input, std::vector<Perceptron::Data> &desired);
+    void load(const std::string &filename, std::vector<float> &input, std::vector<float> &desired);
 
 protected:
-    void parseInput(const std::vector<std::string> &lines, unsigned int &index, std::vector<Perceptron::Data> &input_vector);
+    void parseInput(const std::vector<std::string> &lines, unsigned int &index, std::vector<float> &input_vector);
 
     static LoaderPtr singleton;
 	std::string path;
