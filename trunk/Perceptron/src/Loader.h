@@ -15,7 +15,7 @@ public:
 	~Loader();
 
 	void init(const std::string &path);
-    void load(const std::string &filename, std::vector<std::vector<float>> &inputs);
+    bool load(const std::string &filename, std::vector<std::vector<float>> &inputs);
 
 protected:
     void parseInputs(const std::vector<std::string> &lines, unsigned int &index, std::vector<std::vector<float>> &inputs);

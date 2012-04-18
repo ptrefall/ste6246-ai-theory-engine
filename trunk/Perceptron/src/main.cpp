@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <iomanip>
 
 int main(int /*argc*/, char** argv)
 {
@@ -32,7 +33,10 @@ int main(int /*argc*/, char** argv)
         else if(choice == "3")
             Loader::getSingleton()->load("T.dat", inputs);
         else
-            Loader::getSingleton()->load(choice, inputs);
+        {
+            if(Loader::getSingleton()->load(choice, inputs) == false)
+                continue;
+        }
 
         std::cout << "Which learning rate do you want?" << std::endl;
         std::string learning_rate_string;
@@ -55,14 +59,21 @@ int main(int /*argc*/, char** argv)
             for(unsigned int i = 0; i < inputs.size(); i++)
             {
                 std::cout << "{" << std::endl;
+                std::cout << "\t";
                 for(unsigned int j = 0; j < inputs[i].size(); j++)
-                    std::cout << "\t" << inputs[i][j] << " ";
+                {
+                    //Check if this is our true/false value at the end of the input vector
+                    if(j == inputs[i].size()-1)
+                        std::cout << "(" << std::setprecision(0) << inputs[i][j] << std::fixed << ") ";
+                    else
+                        std::cout << std::setprecision(0) << inputs[i][j] << std::fixed << " ";
+                }
                 std::cout << std::endl << "}" << std::endl << std::endl;
             }
         }
 
-        auto perceptron = std::make_shared<Perceptron>(inputs[0].size()-1); //Last element is expected to be desired result
-        auto results = perceptron->start_learning(iter, learning_rate, inputs); //Start learning the input sets
+        auto nn = std::make_shared<Perceptron>(inputs[0].size()-1); //Last element is expected to be desired result
+        auto results = nn->start_learning(iter, learning_rate, inputs); //Start learning the input sets
 
         std::cout << "Results:" << std::endl;
         std::cout << "{" << std::endl;
@@ -114,7 +125,7 @@ int main(int /*argc*/, char** argv)
             }
         }*/
 
-        std::cout << std::endl << "Run again? 1) yes or 2) no." << std::endl;
+        std::cout << std::endl << "Press (1) to try again or any other key to quit." << std::endl;
         std::string again;
         std::getline(std::cin, again);
         if(again != "1")

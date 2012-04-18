@@ -8,13 +8,14 @@ Perceptron::Perceptron(unsigned int num_input_layer_neurons)
 {
     input_layer = std::make_shared<Layer>(num_input_layer_neurons);
 
-    output_layer = std::make_shared<Layer>(1);
+    //We "customize" the output layer to fit the Perceptron requirements
+    output_layer = std::make_shared<Layer>(1); //NOTE: Only 1 neuron for the Perceptron's Output-layer
     output_layer->connect_from(input_layer);    //Connect the neurons of input_layer with the output_layer neuron
     output_layer->setCellFunc([](float result)          //Define the cell function of the output_layer neuron
     {
         return (result >= 1.0f) ? 1.0f : 0.0f;
     });
-    input_layer->setErrorFunc([](float error, const std::vector<EdgePtr> &edges)          //Define the error function of the output_layer neuron
+    input_layer->setErrorFunc([](float error, const std::vector<EdgePtr> &edges)          //Define the error function of the edges
     {
         std::for_each(begin(edges), end(edges), [&](const EdgePtr &edge)
         {
@@ -74,15 +75,6 @@ std::vector<std::string> Perceptron::train(float learning_rate, const std::vecto
 float Perceptron::calculate_error(float result, float desired)
 {
     return desired - result;
-    /*if(result == desired)
-        return 0.0f;
-
-    if(result < 1.0f)
-        return 1.0f - result;
-    else if(result > 1.0f)
-        return result - 1.0f;
-    else
-        return 0.0f;*/
 }
 
 bool Perceptron::check_error_accum(float error)
