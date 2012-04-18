@@ -15,10 +15,11 @@ public:
 	~Loader();
 
 	void init(const std::string &path);
-    void load(const std::string &filename, std::vector<float> &input, std::vector<float> &desired);
+    void load(const std::string &filename, std::vector<std::vector<float>> &inputs);
 
 protected:
-    void parseInput(const std::vector<std::string> &lines, unsigned int &index, std::vector<float> &input_vector);
+    void parseInputs(const std::vector<std::string> &lines, unsigned int &index, std::vector<std::vector<float>> &inputs);
+    void parseInput(const std::vector<std::string> &lines, unsigned int &index, std::vector<float> &input);
 
     static LoaderPtr singleton;
 	std::string path;

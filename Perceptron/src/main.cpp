@@ -24,16 +24,15 @@ int main(int /*argc*/, char** argv)
         std::string choice;
         std::getline(std::cin, choice);
 
-        std::vector<float> input;
-        std::vector<float> desired;
+        std::vector<std::vector<float>> inputs;
         if(choice == "1")
-            Loader::getSingleton()->load("AND.dat", input, desired);
+            Loader::getSingleton()->load("AND.dat", inputs);
         else if(choice == "2")
-            Loader::getSingleton()->load("OR.dat", input, desired);
+            Loader::getSingleton()->load("OR.dat", inputs);
         else if(choice == "3")
-            Loader::getSingleton()->load("T.dat", input, desired);
+            Loader::getSingleton()->load("T.dat", inputs);
         else
-            Loader::getSingleton()->load(choice, input, desired);
+            Loader::getSingleton()->load(choice, inputs);
 
         std::cout << "Which learning rate do you want?" << std::endl;
         std::string learning_rate_string;
@@ -45,32 +44,36 @@ int main(int /*argc*/, char** argv)
         std::getline(std::cin, iter_str);
         unsigned int iter = ::atoi(iter_str.c_str());
 
-        if(input.empty())
+        if(inputs.empty())
         {
             std::cout << "INPUT VECTOR IS EMPTY!" << std::endl;
             return -1;
         }
-        else if(desired.empty())
-        {
-            std::cout << "DESIRED VECTOR IS EMPTY!" << std::endl;
-            return -1;
-        }
         else
         {
-            std::cout << "Loaded following input vector:" << std::endl;
-            std::cout << "{" << std::endl;
-            for(unsigned int i = 0; i < input.size(); i++)
-                std::cout << input[i] << " ";
-            std::cout << std::endl << "}" << std::endl << std::endl;
-            std::cout << "Loaded following desired vector:" << std::endl;
-            std::cout << "{" << std::endl;
-            for(unsigned int i = 0; i < desired.size(); i++)
-                std::cout << desired[i] << " ";
-            std::cout << std::endl << "}" << std::endl << std::endl;
+            std::cout << "Loaded following input vectors:" << std::endl;
+            for(unsigned int i = 0; i < inputs.size(); i++)
+            {
+                std::cout << "{" << std::endl;
+                for(unsigned int j = 0; j < inputs[i].size(); j++)
+                    std::cout << "\t" << inputs[i][j] << " ";
+                std::cout << std::endl << "}" << std::endl << std::endl;
+            }
         }
 
-        auto perceptron = std::make_shared<Perceptron>(input);
-        perceptron->start_learning(iter);
+        auto perceptron = std::make_shared<Perceptron>(inputs[0].size()-1); //Last element is expected to be desired result
+        auto results = perceptron->start_learning(iter, learning_rate, inputs); //Start learning the input sets
+
+        std::cout << "Results:" << std::endl;
+        std::cout << "{" << std::endl;
+        for(unsigned int i = 0; i < results.size(); i++)
+        {
+            if(i%inputs.size() == 0)
+                std::cout << std::endl;
+
+            std::cout << "\t" << results[i] << std::endl;
+        }
+        std::cout << "}" << std::endl;
 
 
          /*   if(N_TO_N)

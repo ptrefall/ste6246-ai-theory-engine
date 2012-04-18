@@ -1,24 +1,24 @@
 #include "Perceptron.h"
 #include <algorithm>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
 
-Perceptron::Perceptron(const std::vector<float> &input)
+Perceptron::Perceptron(unsigned int num_input_layer_neurons)
 {
-    input_layer = std::make_shared<Layer>(input.size());
-    for(unsigned int i = 0; i < input_layer->getNeurons().size(); i++)
-        input_layer->getNeurons()[i]->set(input[i]);
+    input_layer = std::make_shared<Layer>(num_input_layer_neurons);
 
     output_layer = std::make_shared<Layer>(1);
     output_layer->connect_from(input_layer);    //Connect the neurons of input_layer with the output_layer neuron
     output_layer->setCellFunc([](float result)          //Define the cell function of the output_layer neuron
     {
-        //Basic threshold function. Anything above 1 is 1, anything below 0 is 0.
-        return ((result < 0.0f) ? 0.0f : ((result >= 1.0f) ? 1.0f : result));
+        return (result >= 1.0f) ? 1.0f : 0.0f;
     });
-    output_layer->setErrorFunc([](float error, const std::vector<EdgePtr> &edges)          //Define the error function of the output_layer neuron
+    input_layer->setErrorFunc([](float error, const std::vector<EdgePtr> &edges)          //Define the error function of the output_layer neuron
     {
         std::for_each(begin(edges), end(edges), [&](const EdgePtr &edge)
         {
-            edge->setWeight(edge->getWeight() + error);
+            edge->setWeight(edge->getWeight() + (error * edge->getFrom()->get()));
         });
     });
 }
@@ -27,30 +27,102 @@ Perceptron::~Perceptron()
 {
 }
 
-void Perceptron::start_learning(unsigned int num_cycles)
+std::vector<std::string> Perceptron::start_learning(unsigned int num_cycles, float learning_rate, const std::vector<std::vector<float>> &inputs)
 {
+    std::vector<std::string> results;
     for(unsigned int i = 0; i < num_cycles; i++)
     {
-        float SUM = output_layer->sumEdges();               //Only one neuron who's edges are connected from all the input_layer's neurons
-        float result = output_layer->cell_function(SUM);    //We can call the cell_function directly on the output layer, since we know it only has a single neuron
-        float error = calculate_error(result);              //
-        output_layer->propagate_error(error);               //Propagate errors into the edges between the layers
+        std::vector<std::string> r = train(learning_rate, inputs);
+        results.insert(end(results), begin(r), end(r));
     }
+    
+    return results;
 }
 
-float Perceptron::test() 
+std::vector<std::string> Perceptron::train(float learning_rate, const std::vector<std::vector<float>> &inputs) 
 {
-    return 0.0f;
+    std::vector<float> expected;
+    std::vector<float> results;
+    std::vector<float> errors;
+    std::vector<float> sums;
+
+    //Iterate num cycles through the net and improve our understanding of the input data
+    std::for_each(begin(inputs), end(inputs), [&](const std::vector<float> &input)
+    {
+        for(unsigned int i = 0; i < input_layer->getNeurons().size(); i++)
+            input_layer->getNeurons()[i]->set(input[i]);
+        
+        float desired = input[input.size()-1];
+        float SUM = output_layer->sumEdges();               //Only one neuron who's edges are connected from all the input_layer's neurons
+        float result = output_layer->cell_function(SUM);          //We can call the cell_function directly on the output layer, since we know it only has a single neuron
+        float error = calculate_error(result, desired); //The last index of input vector is expected to be the desired result value
+        float correction = error * learning_rate;
+        input_layer->propagate_error(correction);               //Propagate errors into the edges between the layers
+
+        expected.push_back(desired);
+        results.push_back(result);
+        errors.push_back(error);
+        sums.push_back(SUM);
+
+        if(check_error_accum(error) == false)
+            return;
+    });
+
+    return generate_output(expected, results, errors, sums);
 }
 
-float Perceptron::calculate_error(float result)
+float Perceptron::calculate_error(float result, float desired)
 {
+    return desired - result;
+    /*if(result == desired)
+        return 0.0f;
+
     if(result < 1.0f)
         return 1.0f - result;
     else if(result > 1.0f)
         return result - 1.0f;
     else
-        return 0.0f;
+        return 0.0f;*/
+}
+
+bool Perceptron::check_error_accum(float error)
+{
+    static float last_error = 0.0f;
+    static float error_accum = 0.0f;
+    static unsigned int num_error_accum = 0;
+
+    float delta_error = error - last_error;             //If our delta is negative, then our error is getting smaller, which is good!
+    last_error = error;
+
+    error_accum += delta_error;
+    if((int)(error_accum*1000000.0f) == 0)
+        num_error_accum++;
+    else
+        error_accum = 0.0f;
+
+    //If we have gone 4 iterations,
+    //but none were changing the error delta
+    //then we're not making progress on this
+    //input data.
+    if(num_error_accum > 4)
+        return false;
+
+    return true;
+}
+
+std::vector<std::string> Perceptron::generate_output(const std::vector<float> &expected, const std::vector<float> &results, const std::vector<float> &errors, const std::vector<float> &sums)
+{
+    std::vector<std::string> results_string;
+    for(unsigned int i = 0; i < results.size(); i++)
+    {
+        std::stringstream ss;
+        std::cout.unsetf(std::ios::floatfield);            // floatfield not set
+        std::cout.precision(10);
+        ss << "Expected: " << std::setprecision(5) << expected[i] << "\t\tResult: " << results[i] << "\t\tError: " << errors[i] << "\t\tSums: " << sums[i] << std::fixed;
+        results_string.push_back(ss.str());
+        std::cout.setf(std::ios::fixed,std::ios::floatfield);
+    }
+    return results_string;
 }
 
 
