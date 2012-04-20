@@ -32,6 +32,14 @@ void Layer::setCellFunc(std::function<float(float)> &&cell_func)
     });
 }
 
+void Layer::setCellFunc(const std::function<float(float)> &cell_func)
+{
+    std::for_each(begin(neurons), end(neurons), [&](const NeuronPtr &neuron)
+    {
+        neuron->setCellFunc(cell_func);
+    });
+}
+
 float Layer::cell_function(float result)
 {
     //You would probably only call this for convenience if you know this layer only has one neuron...
@@ -48,6 +56,13 @@ void Layer::setErrorFunc(std::function<void(float, const std::vector<EdgePtr> &)
     std::for_each(begin(neurons), end(neurons), [&](const NeuronPtr &neuron)
     {
         neuron->setErrorFunc(std::move(error_func));
+    });
+}
+void Layer::setErrorFunc(const std::function<void(float, const std::vector<EdgePtr> &)> &error_func)
+{
+    std::for_each(begin(neurons), end(neurons), [&](const NeuronPtr &neuron)
+    {
+        neuron->setErrorFunc(error_func);
     });
 }
 void Layer::propagate_error(float error)
