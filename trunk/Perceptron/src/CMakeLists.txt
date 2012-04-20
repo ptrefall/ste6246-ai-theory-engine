@@ -29,6 +29,7 @@ set(HDRS
   StringHelper.h
   Random.h
   Perceptron.h
+  BackPropagation.h
   Network.h
 )
 
@@ -38,6 +39,7 @@ set(SRCS
   StringHelper.cpp
   Random.cpp
   Perceptron.cpp
+  BackPropagation.cpp
   Network.cpp
 )
  

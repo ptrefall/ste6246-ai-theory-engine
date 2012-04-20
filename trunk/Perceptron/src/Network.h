@@ -41,9 +41,11 @@ public:
     float sumEdges();
 
     void setCellFunc(std::function<float(float)> &&cell_func)  { this->cell_func = cell_func; }
+	void setCellFunc(const std::function<float(float)> &cell_func)  { this->cell_func = cell_func; }
     float cell_function(float result) { return cell_func(result); }
 
     void setErrorFunc(std::function<void(float, const std::vector<EdgePtr> &)> &&error_func)  { this->error_func = error_func; }
+	void setErrorFunc(const std::function<void(float, const std::vector<EdgePtr> &)> &error_func)  { this->error_func = error_func; }
     void propagate_error(float error);
 
 private:
@@ -74,9 +76,11 @@ public:
     float sumEdges();
 
     void setCellFunc(std::function<float(float)> &&cell_func);
+	void setCellFunc(const std::function<float(float)> &cell_func);
     float cell_function(float result);
 
     void setErrorFunc(std::function<void(float, const std::vector<EdgePtr> &)> &&error_func);
+	void setErrorFunc(const std::function<void(float, const std::vector<EdgePtr> &)> &error_func);
     void propagate_error(float error);
 
 private:
