@@ -1,0 +1,1 @@
+An engine based on Irrlicht / Totem / C++ for use in AI Theory course at NUC
